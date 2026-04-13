@@ -1,94 +1,79 @@
-# Carfinder Scraper Worker
+# Carfinder (monorepo)
 
-Distributed CarSensor scraper with:
+NestJS API with CarSensor scraping, Prisma, BullMQ, and JWT. Frontend will live under `frontend/`.
 
-- Dynamic page discovery from the `最後` pagination link.
-- Hourly scheduler (`SCRAPE_CRON`) that creates run snapshots.
-- BullMQ queue with one job per page.
-- Worker processing with retries and exponential backoff.
-- PostgreSQL persistence via Prisma with idempotent upserts.
+## Repository layout
+
+```
+carfinder/
+  docker-compose.yml   # PostgreSQL + Redis (run from repo root)
+  README.md            # this file
+  backend/             # Nest app, Prisma, package.json
+  frontend/            # Next.js / React (placeholder; see frontend/README.md)
+```
 
 ## Prerequisites
 
 - Node.js 20+
-- Docker + Docker Compose
+- Docker and Docker Compose
 
 ## Quick start
 
-1. Install dependencies:
-
-```bash
-npm install
-```
-
-2. Start infrastructure:
+### 1. Infrastructure (from repository root)
 
 ```bash
 docker compose up -d
 ```
 
-3. Configure environment:
+### 2. Backend environment
 
 ```bash
+cd backend
 cp .env.example .env
+# Edit .env if needed (DATABASE_URL, REDIS_URL, JWT_SECRET, etc.)
 ```
 
-4. Prepare database schema:
+### 3. Database schema and seed (optional)
 
 ```bash
+cd backend
 npm run db:setup
+npm run prisma:seed
 ```
 
-5. Run scheduler + workers:
+### 4. Run the API (scheduler + workers + HTTP)
 
 ```bash
-npm run start
-```
-
-## Useful scripts
-
-- `npm run prisma:generate` - Generate Prisma client.
-- `npm run prisma:push` - Push Prisma schema to database.
-- `npm run db:setup` - Generate and push schema.
-- `npm run start` - Start Nest app with scheduler and worker.
-- `npm run start:workers` - Start app with worker concurrency set to 50.
-
-## Environment variables
-
-See `.env.example` for all values.
-# CarSensor One-Page Scraper (NestJS)
-
-Minimal NestJS worker that scrapes one CarSensor listing page:
-
-- Target URL: `https://www.carsensor.net/usedcar/index1.html?SORT=19`
-- Input: pure HTML page
-- Output: parsed car objects printed as JSON
-
-## Run
-
-```bash
+cd backend
 npm install
 npm run start
 ```
 
-## What It Extracts
+Default HTTP port is `3000` unless you set `APP_PORT` in `backend/.env`.
 
-- `id`
-- `brand`
-- `fullTitle`
-- `model` (simple split from title)
-- `year`
-- `mileageKm`
-- `priceYen`
-- `engineCc`
-- `sellerName`
-- `listingUrl`
-- `mainPhotoUrl`
-- `photoUrls`
-- `raw` (raw source values)
+### 5. Frontend (when added)
 
-## Notes
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- KISS approach: one page, one run, no DB, no cron.
-- Price is normalized from values like `480` (displayed as `万円`) into `4,800,000`.
-- If the page does not expose image URLs in static HTML, photo fields may be `null` or empty.
+Set `NEXT_PUBLIC_API_URL` to your API base URL (e.g. `http://localhost:3000`).
+
+## API (summary)
+
+- `POST /auth/login` — body: `{ "username", "password" }` (seed user: `admin` / `admin123` after `prisma:seed`)
+- `GET /auth/me` — Bearer JWT
+- `GET /cars` — Bearer JWT; query filters, sort, pagination
+- `GET /cars/:id` — Bearer JWT
+
+## Deploy notes
+
+- **Backend (Railway, Render, Fly, etc.):** set the service **root directory** to `backend`.
+- **Frontend (Vercel, Netlify, etc.):** set **root directory** to `frontend`.
+- Keep `JWT_SECRET` and database URLs in the provider’s secret/env UI, not in git.
+
+## More detail
+
+See [backend/README.md](backend/README.md) for scraper behavior, scripts, and environment variables.
