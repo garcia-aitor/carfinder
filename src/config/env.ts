@@ -7,6 +7,21 @@ function toInt(value: string | undefined, fallback: number): number {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function toBool(value: string | undefined, fallback: boolean): boolean {
+  if (!value) {
+    return fallback;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) {
+    return true;
+  }
+  if (["0", "false", "no", "off"].includes(normalized)) {
+    return false;
+  }
+  return fallback;
+}
+
 export const env = {
   databaseUrl:
     process.env.DATABASE_URL ??
@@ -25,4 +40,5 @@ export const env = {
     process.env.AVAILABILITY_MISSING_RUNS_THRESHOLD,
     2,
   ),
+  scrapeRunOnBootstrap: toBool(process.env.SCRAPE_RUN_ON_BOOTSTRAP, true),
 };

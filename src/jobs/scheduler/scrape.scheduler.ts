@@ -25,6 +25,11 @@ export class ScrapeScheduler implements OnApplicationBootstrap {
   }
 
   async onApplicationBootstrap(): Promise<void> {
+    if (!env.scrapeRunOnBootstrap) {
+      this.logger.log("Bootstrap scrape disabled via SCRAPE_RUN_ON_BOOTSTRAP.");
+      return;
+    }
+
     void this.startRun();
   }
 
@@ -37,8 +42,10 @@ export class ScrapeScheduler implements OnApplicationBootstrap {
     this.running = true;
     try {
       const runId = randomUUID();
-      const discoveredTotalPages = await this.scraperService.discoverTotalPages();
+      const discoveredTotalPages =
+        await this.scraperService.discoverTotalPages();
       const totalPages = Math.min(discoveredTotalPages, env.scrapeMaxPagesCap);
+      this.logger.log(`Total pages: ${totalPages}`);
       const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
 
       await this.scrapeRunRepository.createRun(runId, totalPages);
@@ -52,7 +59,9 @@ export class ScrapeScheduler implements OnApplicationBootstrap {
       );
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Unknown error while scheduling run";
+        error instanceof Error
+          ? error.message
+          : "Unknown error while scheduling run";
       this.logger.error(message);
     } finally {
       this.running = false;
@@ -64,7 +73,10 @@ export class ScrapeScheduler implements OnApplicationBootstrap {
     initialTotalPages: number,
   ): Promise<void> {
     const discoveredAfterQueue = await this.scraperService.discoverTotalPages();
-    const cappedAfterQueue = Math.min(discoveredAfterQueue, env.scrapeMaxPagesCap);
+    const cappedAfterQueue = Math.min(
+      discoveredAfterQueue,
+      env.scrapeMaxPagesCap,
+    );
     if (cappedAfterQueue <= initialTotalPages) {
       return;
     }
@@ -74,7 +86,10 @@ export class ScrapeScheduler implements OnApplicationBootstrap {
       (_, index) => initialTotalPages + index + 1,
     );
 
-    await this.scrapeRunRepository.appendQueuedPages(runId, catchUpPages.length);
+    await this.scrapeRunRepository.appendQueuedPages(
+      runId,
+      catchUpPages.length,
+    );
     await this.scrapeJobRepository.createQueuedJobs(runId, catchUpPages);
     await this.producer.enqueuePages(runId, catchUpPages);
 
