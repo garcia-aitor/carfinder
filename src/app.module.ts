@@ -3,6 +3,7 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { ScraperModule } from "./scraper/scraper.module";
 import { JobsModule } from "./jobs/jobs.module";
 import { PersistenceModule } from "./persistence/persistence.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { PersistenceModule } from "./persistence/persistence.module";
     ScraperModule,
     PersistenceModule,
     JobsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

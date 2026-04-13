@@ -83,3 +83,12 @@ model ScrapeJob {
   @@unique([runId, page])
   @@index([runId, status])
 }
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

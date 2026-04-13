@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import "dotenv/config";
-import { Logger } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { getQueueToken } from "@nestjs/bullmq";
 import { Queue } from "bullmq";
@@ -15,6 +15,13 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     logger: ["log", "error", "warn"],
   });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   const queue = app.get<Queue>(getQueueToken(SCRAPE_QUEUE));
   const serverAdapter = new ExpressAdapter();

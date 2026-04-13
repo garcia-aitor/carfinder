@@ -28,7 +28,10 @@ export const env = {
     "postgresql://postgres:postgres@localhost:5432/carfinder?schema=public",
   redisUrl: process.env.REDIS_URL ?? "redis://localhost:6379",
   scrapeCron: process.env.SCRAPE_CRON ?? "0 * * * *",
-  scrapeFallbackTotalPages: toInt(process.env.SCRAPE_DEFAULT_TOTAL_PAGES, 17500),
+  scrapeFallbackTotalPages: toInt(
+    process.env.SCRAPE_DEFAULT_TOTAL_PAGES,
+    17500,
+  ),
   scrapeMaxPagesCap: toInt(process.env.SCRAPE_MAX_PAGES_CAP, 20000),
   queueAttempts: toInt(process.env.QUEUE_ATTEMPTS, 5),
   queueBackoffMs: toInt(process.env.QUEUE_BACKOFF_MS, 2000),
@@ -41,4 +44,6 @@ export const env = {
     2,
   ),
   scrapeRunOnBootstrap: toBool(process.env.SCRAPE_RUN_ON_BOOTSTRAP, true),
+  jwtSecret: process.env.JWT_SECRET ?? "change-me-in-production",
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? "1d",
 };
