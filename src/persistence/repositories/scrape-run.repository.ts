@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, ScrapeRunStatus } from "@prisma/client";
 import { env } from "../../config/env";
+import { consoleRunProgress } from "../../jobs/console-run-progress";
 import { CarRepository } from "./car.repository";
 import { PrismaService } from "../prisma/prisma.service";
 
@@ -70,6 +71,8 @@ export class ScrapeRunRepository {
       return;
     }
 
+    consoleRunProgress.tick(runId, run.processedPages, run.queuedPages);
+
     if (run.processedPages < run.queuedPages) {
       return;
     }
@@ -87,11 +90,38 @@ export class ScrapeRunRepository {
       },
     });
 
-    if (closed.count === 1 && finalStatus === ScrapeRunStatus.COMPLETED) {
-      await this.carRepository.reconcileAvailabilityForCompletedRun(
-        runId,
-        env.availabilityMissingRunsThreshold,
-      );
+    if (closed.count === 1) {
+      const summary = await this.prisma.scrapeRun.findUnique({
+        where: { id: runId },
+        select: {
+          startedAt: true,
+          finishedAt: true,
+          processedPages: true,
+          queuedPages: true,
+          status: true,
+        },
+      });
+      if (
+        summary?.startedAt &&
+        summary.finishedAt &&
+        summary.status !== ScrapeRunStatus.RUNNING
+      ) {
+        const durationMs = summary.finishedAt.getTime() - summary.startedAt.getTime();
+        consoleRunProgress.doneLine(
+          runId,
+          summary.processedPages,
+          summary.queuedPages,
+          durationMs,
+          summary.status,
+        );
+      }
+
+      if (finalStatus === ScrapeRunStatus.COMPLETED) {
+        await this.carRepository.reconcileAvailabilityForCompletedRun(
+          runId,
+          env.availabilityMissingRunsThreshold,
+        );
+      }
     }
   }
 }

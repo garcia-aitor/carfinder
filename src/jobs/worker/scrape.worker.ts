@@ -41,10 +41,6 @@ export class ScrapeWorker extends WorkerHost {
 
       await this.scrapeJobRepository.markSuccess(runId, page, cars.length);
       await this.scrapeRunRepository.registerJobSuccess(runId);
-
-      this.logger.log(
-        `Run ${runId} page ${page} succeeded. Cars persisted: ${cars.length}.`,
-      );
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown worker error";
       const maxAttempts = job.opts.attempts ?? 1;

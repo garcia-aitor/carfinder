@@ -21,7 +21,7 @@ export class ScrapeScheduler implements OnApplicationBootstrap {
 
   @Cron(env.scrapeCron)
   async handleCron(): Promise<void> {
-    await this.startRun();
+    //await this.startRun();
   }
 
   async onApplicationBootstrap(): Promise<void> {

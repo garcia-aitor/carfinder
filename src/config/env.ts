@@ -43,7 +43,7 @@ export const env = {
     process.env.AVAILABILITY_MISSING_RUNS_THRESHOLD,
     2,
   ),
-  scrapeRunOnBootstrap: toBool(process.env.SCRAPE_RUN_ON_BOOTSTRAP, true),
+  scrapeRunOnBootstrap: toBool(process.env.SCRAPE_RUN_ON_BOOTSTRAP, false),
   jwtSecret: process.env.JWT_SECRET ?? "change-me-in-production",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? "1d",
 };

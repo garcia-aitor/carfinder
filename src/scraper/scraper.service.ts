@@ -117,7 +117,7 @@ export class ScraperService {
       });
     }
 
-    this.logger.log(`Parsed ${results.length} cars from page ${page}.`);
+    this.logger.debug(`Parsed ${results.length} cars from page ${page}.`);
     return results;
   }
 
