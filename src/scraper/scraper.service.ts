@@ -142,10 +142,12 @@ export class ScraperService {
 
   private extractLastPageFromHtml(html: string): number {
     const $ = cheerio.load(html);
-    const pagerLinks = $(".pager_text .js-carListTopPagerBtn").toArray();
+    const pagerLinks = $(".pager__text a.js-carListTopPagerBtn[href]").toArray();
+    const legacyPagerLinks = $(".pager_text a.js-carListTopPagerBtn[href]").toArray();
+    const links = pagerLinks.length > 0 ? pagerLinks : legacyPagerLinks;
 
     let lastHref: string | null = null;
-    for (const linkEl of pagerLinks) {
+    for (const linkEl of links) {
       const link = $(linkEl);
       const text = cleanText(link.text());
       if (text?.includes("最後")) {
@@ -154,8 +156,8 @@ export class ScraperService {
       }
     }
 
-    if (!lastHref && pagerLinks.length > 0) {
-      lastHref = cleanText($(pagerLinks[pagerLinks.length - 1]).attr("href"));
+    if (!lastHref && links.length > 0) {
+      lastHref = cleanText($(links[links.length - 1]).attr("href"));
     }
 
     if (!lastHref) {
