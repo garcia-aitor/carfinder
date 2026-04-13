@@ -1,0 +1,40 @@
+{
+  "name": "carfinder",
+  "version": "1.0.0",
+  "description": "Minimal NestJS worker for one-page CarSensor scraping",
+  "main": "dist/main.js",
+  "scripts": {
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "db:setup": "npm run prisma:generate && npm run prisma:push",
+    "start": "ts-node src/main.ts",
+    "start:workers": "WORKER_CONCURRENCY=50 ts-node src/main.ts",
+    "test": "echo \"No tests configured\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@bull-board/api": "^6.21.2",
+    "@bull-board/express": "^6.21.2",
+    "@nestjs/bullmq": "^11.0.4",
+    "@nestjs/common": "^11.1.19",
+    "@nestjs/core": "^11.1.19",
+    "@nestjs/platform-express": "^11.1.19",
+    "@nestjs/schedule": "^6.1.1",
+    "@prisma/client": "^6.19.3",
+    "axios": "^1.15.0",
+    "bullmq": "^5.73.5",
+    "cheerio": "^1.2.0",
+    "ioredis": "^5.10.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "prisma": "^6.19.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  }
+}

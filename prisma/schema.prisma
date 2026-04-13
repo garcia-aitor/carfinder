@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ScrapeRunStatus {
+  RUNNING
+  COMPLETED
+  PARTIAL_FAILED
+}
+
+enum ScrapeJobStatus {
+  QUEUED
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+model Car {
+  id           String   @id @default(cuid())
+  listingUrl   String   @unique
+  externalId   String?
+  brand        String?
+  fullTitle    String?
+  model        String?
+  year         Int?
+  color        String?
+  mileageKm    Int?
+  priceYen     Int?
+  engineCc     Int?
+  sellerName   String?
+  sellerUrl    String?
+  mainPhotoUrl String?
+  photoUrls    Json
+  raw          Json
+  isAvailable  Boolean  @default(true)
+  lastSeenRunId String?
+  missingRuns  Int      @default(0)
+  firstSeenAt  DateTime @default(now())
+  lastSeenAt   DateTime @updatedAt
+  disappearedAt DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isAvailable])
+  @@index([lastSeenRunId])
+  @@index([missingRuns])
+}
+
+model ScrapeRun {
+  id             String          @id
+  totalPages     Int
+  status         ScrapeRunStatus
+  queuedPages    Int             @default(0)
+  processedPages Int             @default(0)
+  successPages   Int             @default(0)
+  failedPages    Int             @default(0)
+  startedAt      DateTime        @default(now())
+  finishedAt     DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  jobs           ScrapeJob[]
+}
+
+model ScrapeJob {
+  id          String         @id @default(cuid())
+  runId       String
+  page        Int
+  status      ScrapeJobStatus
+  attempts    Int            @default(0)
+  carsCount   Int            @default(0)
+  lastError   String?
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  run         ScrapeRun      @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, page])
+  @@index([runId, status])
+}
