@@ -8,9 +8,8 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
+    "rootDir": "./src",
     "outDir": "./dist",
-    "ignoreDeprecations": "6.0",
-    "baseUrl": "./",
     "incremental": true,
     "strict": true,
     "skipLibCheck": true
