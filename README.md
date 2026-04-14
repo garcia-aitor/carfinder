@@ -19,21 +19,28 @@ carfinder/
 
 ## Quick start
 
-### 1. Infrastructure (from repository root)
+### 1. Infrastructure environment (from repository root)
+
+```bash
+cp .env.example .env
+# Edit .env with strong values for POSTGRES_PASSWORD and REDIS_PASSWORD
+```
+
+### 2. Infrastructure (from repository root)
 
 ```bash
 docker compose up -d
 ```
 
-### 2. Backend environment
+### 3. Backend environment
 
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env if needed (DATABASE_URL, REDIS_URL, JWT_SECRET, etc.)
+# Keep credentials aligned with root .env and set a strong JWT_SECRET
 ```
 
-### 3. Database schema and seed (optional)
+### 4. Database schema and seed (optional)
 
 ```bash
 cd backend
@@ -41,7 +48,7 @@ npm run db:setup
 npm run prisma:seed
 ```
 
-### 4. Run the API (scheduler + workers + HTTP)
+### 5. Run the API (scheduler + workers + HTTP)
 
 ```bash
 cd backend
@@ -51,7 +58,7 @@ npm run start
 
 Default HTTP port is `3000` unless you set `APP_PORT` in `backend/.env`.
 
-### 5. Frontend (when added)
+### 6. Frontend (when added)
 
 ```bash
 cd frontend

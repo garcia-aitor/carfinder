@@ -10,13 +10,16 @@ API, scraper worker, Prisma, and BullMQ. Run all commands from this directory (`
 ## Quick start
 
 ```bash
-# From repo root: start Postgres + Redis
+# From repo root: configure and start Postgres + Redis
 cd ..
+cp .env.example .env
+# Edit .env with strong values for POSTGRES_PASSWORD and REDIS_PASSWORD
 docker compose up -d
 cd backend
 
 npm install
 cp .env.example .env
+# Keep DATABASE_URL/REDIS_URL credentials aligned with ../.env and set JWT_SECRET
 npm run db:setup
 npm run prisma:seed
 npm run start
