@@ -1,10 +1,11 @@
 "use client";
 
-import axios from "axios";
+import axios from "axios/dist/node/axios.cjs";
 import { getAuthToken } from "../auth/auth-store";
 
 const baseURL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ??
+  "http://localhost:3000";
 
 export const apiClient = axios.create({
   baseURL,

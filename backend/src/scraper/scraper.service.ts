@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import axios from "axios";
+import axios from "axios/dist/node/axios.cjs";
 import * as cheerio from "cheerio";
 import { env } from "../config/env";
 import {
@@ -28,8 +28,12 @@ export class ScraperService {
       }
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Failed to discover total pages";
-      this.logger.warn(`${message}. Falling back to ${this.fallbackTotalPages}.`);
+        error instanceof Error
+          ? error.message
+          : "Failed to discover total pages";
+      this.logger.warn(
+        `${message}. Falling back to ${this.fallbackTotalPages}.`,
+      );
     }
 
     return this.fallbackTotalPages;
@@ -142,8 +146,12 @@ export class ScraperService {
 
   private extractLastPageFromHtml(html: string): number {
     const $ = cheerio.load(html);
-    const pagerLinks = $(".pager__text a.js-carListTopPagerBtn[href]").toArray();
-    const legacyPagerLinks = $(".pager_text a.js-carListTopPagerBtn[href]").toArray();
+    const pagerLinks = $(
+      ".pager__text a.js-carListTopPagerBtn[href]",
+    ).toArray();
+    const legacyPagerLinks = $(
+      ".pager_text a.js-carListTopPagerBtn[href]",
+    ).toArray();
     const links = pagerLinks.length > 0 ? pagerLinks : legacyPagerLinks;
 
     let lastHref: string | null = null;
