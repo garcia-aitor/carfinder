@@ -9,6 +9,7 @@ import {
   normalizeBrand,
   normalizeCarTerm,
   normalizeColor,
+  normalizeModel,
   normalizeTextOrFallback,
 } from "./jp-to-en";
 
@@ -41,8 +42,8 @@ function toPhotoUrls(value: unknown): string[] {
 }
 
 export function mapCarToViewModel(car: Car): CarViewModel {
-  const title = normalizeTextOrFallback(car.fullTitle ?? car.model);
-  const model = normalizeTextOrFallback(car.model ?? car.fullTitle);
+  const title = normalizeModel(car.fullTitle ?? car.model, car.brand);
+  const model = normalizeModel(car.model ?? car.fullTitle, car.brand);
   const badges = [car.model, car.fullTitle]
     .map((entry) => normalizeCarTerm(entry))
     .filter((item) => item !== "N/A")

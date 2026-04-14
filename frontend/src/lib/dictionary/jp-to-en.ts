@@ -228,6 +228,356 @@ const CAR_TERM_MAP: Record<string, string> = {
   ワンオーナー: "One owner",
 };
 
+function normalizeModelKey(value: string): string {
+  return value
+    .normalize("NFKC")
+    .replace(/[・･·]/g, " ")
+    .replace(/[-‐‑‒–—―]/g, "-")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toUpperCase();
+}
+
+const MODEL_ALIASES: Array<[string, string]> = [
+  ["ランドクルーザー", "Land Cruiser"],
+  ["ランドクルーザープラド", "Land Cruiser Prado"],
+  ["プラド", "Prado"],
+  ["アルファード", "Alphard"],
+  ["ヴェルファイア", "Vellfire"],
+  ["ハリアー", "Harrier"],
+  ["ヤリス", "Yaris"],
+  ["ヤリスクロス", "Yaris Cross"],
+  ["アクア", "Aqua"],
+  ["プリウス", "Prius"],
+  ["カローラ", "Corolla"],
+  ["カローラクロス", "Corolla Cross"],
+  ["クラウン", "Crown"],
+  ["クラウンスポーツ", "Crown Sport"],
+  ["ノア", "Noah"],
+  ["ヴォクシー", "Voxy"],
+  ["シエンタ", "Sienta"],
+  ["ルーミー", "Roomy"],
+  ["RAV4", "RAV4"],
+  ["CH-R", "C-HR"],
+  ["C-HR", "C-HR"],
+  ["セレナ", "Serena"],
+  ["ノート", "Note"],
+  ["エクストレイル", "X-Trail"],
+  ["スカイライン", "Skyline"],
+  ["フェアレディZ", "Fairlady Z"],
+  ["デイズ", "Dayz"],
+  ["キックス", "Kicks"],
+  ["ルークス", "Roox"],
+  ["シビック", "Civic"],
+  ["フィット", "Fit"],
+  ["ヴェゼル", "Vezel"],
+  ["フリード", "Freed"],
+  ["ステップワゴン", "Stepwgn"],
+  ["オデッセイ", "Odyssey"],
+  ["N-BOX", "N-BOX"],
+  ["N-WGN", "N-WGN"],
+  ["N-ONE", "N-ONE"],
+  ["デミオ", "Demio"],
+  ["アクセラ", "Axela"],
+  ["アテンザ", "Atenza"],
+  ["ロードスター", "Roadster"],
+  ["CX-3", "CX-3"],
+  ["CX-5", "CX-5"],
+  ["CX-8", "CX-8"],
+  ["CX-30", "CX-30"],
+  ["フォレスター", "Forester"],
+  ["インプレッサ", "Impreza"],
+  ["レヴォーグ", "Levorg"],
+  ["レガシィ", "Legacy"],
+  ["アウトバック", "Outback"],
+  ["XV", "XV"],
+  ["WRX", "WRX"],
+  ["ジムニー", "Jimny"],
+  ["スイフト", "Swift"],
+  ["ハスラー", "Hustler"],
+  ["スペーシア", "Spacia"],
+  ["ワゴンR", "Wagon R"],
+  ["タント", "Tanto"],
+  ["ムーヴ", "Move"],
+  ["ミライース", "Mira e:S"],
+  ["ロッキー", "Rocky"],
+  ["タフト", "Taft"],
+  ["RX", "RX"],
+  ["NX", "NX"],
+  ["UX", "UX"],
+  ["LX", "LX"],
+  ["LS", "LS"],
+  ["ES", "ES"],
+  ["IS", "IS"],
+  ["CT", "CT"],
+  ["MODEL S", "Model S"],
+  ["MODEL 3", "Model 3"],
+  ["MODEL X", "Model X"],
+  ["MODEL Y", "Model Y"],
+  ["QASHQAI", "Qashqai"],
+  ["MERCEDES-BENZ C-CLASS", "C-Class"],
+  ["MERCEDES-BENZ E-CLASS", "E-Class"],
+  ["MERCEDES-BENZ S-CLASS", "S-Class"],
+  ["3 SERIES", "3 Series"],
+  ["5 SERIES", "5 Series"],
+  ["7 SERIES", "7 Series"],
+  ["A3", "A3"],
+  ["A4", "A4"],
+  ["A6", "A6"],
+  ["GOLF", "Golf"],
+  ["PASSAT", "Passat"],
+  ["POLO", "Polo"],
+];
+
+const MODEL_MAP = Object.fromEntries(
+  MODEL_ALIASES.map(([alias, model]) => [normalizeModelKey(alias), model]),
+);
+
+const KANA_ROMAJI_MAP: Record<string, string> = {
+  キャ: "kya",
+  キュ: "kyu",
+  キョ: "kyo",
+  シャ: "sha",
+  シュ: "shu",
+  ショ: "sho",
+  チャ: "cha",
+  チュ: "chu",
+  チョ: "cho",
+  ニャ: "nya",
+  ニュ: "nyu",
+  ニョ: "nyo",
+  ヒャ: "hya",
+  ヒュ: "hyu",
+  ヒョ: "hyo",
+  ミャ: "mya",
+  ミュ: "myu",
+  ミョ: "myo",
+  リャ: "rya",
+  リュ: "ryu",
+  リョ: "ryo",
+  ギャ: "gya",
+  ギュ: "gyu",
+  ギョ: "gyo",
+  ジャ: "ja",
+  ジュ: "ju",
+  ジョ: "jo",
+  ビャ: "bya",
+  ビュ: "byu",
+  ビョ: "byo",
+  ピャ: "pya",
+  ピュ: "pyu",
+  ピョ: "pyo",
+  ティ: "ti",
+  ディ: "di",
+  トゥ: "tu",
+  ドゥ: "du",
+  ツァ: "tsa",
+  ツィ: "tsi",
+  ツェ: "tse",
+  ツォ: "tso",
+  ファ: "fa",
+  フィ: "fi",
+  フェ: "fe",
+  フォ: "fo",
+  ウィ: "wi",
+  ウェ: "we",
+  ウォ: "wo",
+  ヴァ: "va",
+  ヴィ: "vi",
+  ヴ: "vu",
+  ヴェ: "ve",
+  ヴォ: "vo",
+  ア: "a",
+  イ: "i",
+  ウ: "u",
+  エ: "e",
+  オ: "o",
+  カ: "ka",
+  キ: "ki",
+  ク: "ku",
+  ケ: "ke",
+  コ: "ko",
+  サ: "sa",
+  シ: "shi",
+  ス: "su",
+  セ: "se",
+  ソ: "so",
+  タ: "ta",
+  チ: "chi",
+  ツ: "tsu",
+  テ: "te",
+  ト: "to",
+  ナ: "na",
+  ニ: "ni",
+  ヌ: "nu",
+  ネ: "ne",
+  ノ: "no",
+  ハ: "ha",
+  ヒ: "hi",
+  フ: "fu",
+  ヘ: "he",
+  ホ: "ho",
+  マ: "ma",
+  ミ: "mi",
+  ム: "mu",
+  メ: "me",
+  モ: "mo",
+  ヤ: "ya",
+  ユ: "yu",
+  ヨ: "yo",
+  ラ: "ra",
+  リ: "ri",
+  ル: "ru",
+  レ: "re",
+  ロ: "ro",
+  ワ: "wa",
+  ヲ: "wo",
+  ン: "n",
+  ガ: "ga",
+  ギ: "gi",
+  グ: "gu",
+  ゲ: "ge",
+  ゴ: "go",
+  ザ: "za",
+  ジ: "ji",
+  ズ: "zu",
+  ゼ: "ze",
+  ゾ: "zo",
+  ダ: "da",
+  ヂ: "ji",
+  ヅ: "zu",
+  デ: "de",
+  ド: "do",
+  バ: "ba",
+  ビ: "bi",
+  ブ: "bu",
+  ベ: "be",
+  ボ: "bo",
+  パ: "pa",
+  ピ: "pi",
+  プ: "pu",
+  ペ: "pe",
+  ポ: "po",
+};
+
+const ALL_CAP_MODEL_TOKENS = new Set([
+  "GT",
+  "GTR",
+  "GR",
+  "RS",
+  "ST",
+  "STI",
+  "TYPE",
+  "R",
+  "EV",
+  "HEV",
+  "PHEV",
+  "HV",
+  "SUV",
+  "XV",
+  "RX",
+  "NX",
+  "UX",
+  "LX",
+  "LS",
+  "ES",
+  "IS",
+  "CT",
+  "ZX",
+  "ZXI",
+  "AWD",
+  "4WD",
+  "2WD",
+]);
+
+function toKatakana(char: string): string {
+  const code = char.charCodeAt(0);
+  if (code >= 0x3041 && code <= 0x3096) {
+    return String.fromCharCode(code + 0x60);
+  }
+  return char;
+}
+
+function titleCaseModelToken(token: string): string {
+  if (!token) {
+    return token;
+  }
+
+  const upper = token.toUpperCase();
+  if (
+    ALL_CAP_MODEL_TOKENS.has(upper) ||
+    /[0-9]/.test(token) ||
+    token.includes("-")
+  ) {
+    return upper;
+  }
+  return upper[0] + upper.slice(1).toLowerCase();
+}
+
+function prettifyRomanizedModel(value: string): string {
+  return value
+    .replace(/\s+/g, " ")
+    .trim()
+    .split(" ")
+    .map((token) => titleCaseModelToken(token))
+    .join(" ");
+}
+
+function getLastVowel(value: string): string {
+  const matches = value.match(/[aeiou](?!.*[aeiou])/);
+  return matches ? matches[0] : "";
+}
+
+function transliterateKanaToRomaji(value: string): string {
+  const chars = Array.from(value).map((char) => toKatakana(char));
+  let result = "";
+  let geminate = false;
+
+  for (let index = 0; index < chars.length; index += 1) {
+    const current = chars[index] ?? "";
+    const next = chars[index + 1] ?? "";
+
+    if (current === "ッ") {
+      geminate = true;
+      continue;
+    }
+
+    if (current === "ー") {
+      const vowel = getLastVowel(result);
+      if (vowel) {
+        result += vowel;
+      }
+      continue;
+    }
+
+    const pair = `${current}${next}`;
+    let romaji = "";
+    if (KANA_ROMAJI_MAP[pair]) {
+      romaji = KANA_ROMAJI_MAP[pair];
+      index += 1;
+    } else if (KANA_ROMAJI_MAP[current]) {
+      romaji = KANA_ROMAJI_MAP[current];
+    } else {
+      romaji = current;
+    }
+
+    if (geminate && /^[a-z]/.test(romaji)) {
+      result += romaji[0];
+      geminate = false;
+    } else {
+      geminate = false;
+    }
+
+    result += romaji;
+  }
+
+  return result;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function normalizeText(value: string | null | undefined): string {
   return (value ?? "").replace(/\s+/g, " ").trim();
 }
@@ -277,6 +627,43 @@ export function normalizeColor(value: string | null | undefined): string {
 
 export function normalizeCarTerm(value: string | null | undefined): string {
   return translateWithMap(value, CAR_TERM_MAP);
+}
+
+export function normalizeModel(
+  value: string | null | undefined,
+  brand?: string | null,
+): string {
+  const text = normalizeText(value);
+  if (!text) {
+    return "N/A";
+  }
+
+  const normalizedModel = normalizeModelKey(text);
+  if (MODEL_MAP[normalizedModel]) {
+    return MODEL_MAP[normalizedModel];
+  }
+
+  const sortedAliases = Object.entries(MODEL_MAP).sort(
+    (entryA, entryB) => entryB[0].length - entryA[0].length,
+  );
+  for (const [alias, translation] of sortedAliases) {
+    if (normalizedModel.includes(alias)) {
+      return translation;
+    }
+  }
+
+  let strippedModelText = text;
+  if (brand) {
+    const normalizedBrand = normalizeBrand(brand);
+    strippedModelText = strippedModelText
+      .replace(new RegExp(`^${escapeRegExp(normalizedBrand)}\\s+`, "i"), "")
+      .replace(new RegExp(`^${escapeRegExp(brand)}\\s+`, "i"), "");
+  }
+
+  const transliterated = transliterateKanaToRomaji(
+    strippedModelText.normalize("NFKC"),
+  );
+  return prettifyRomanizedModel(transliterated || strippedModelText);
 }
 
 export function normalizeTextOrFallback(value: string | null | undefined): string {
