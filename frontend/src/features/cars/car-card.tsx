@@ -22,7 +22,7 @@ export function CarCard({ car }: CarCardProps) {
       className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
     >
       <article className="overflow-hidden rounded-[26px] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(15,23,42,0.14)]">
-        <div className="relative h-48 w-full">
+        <div className="relative h-68 w-full">
           <Image
             src={cardImage}
             alt={car.title}
