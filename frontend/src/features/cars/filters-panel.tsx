@@ -10,15 +10,27 @@ import type { CarsQuery } from "@/lib/api/types";
 interface FiltersPanelProps {
   initialQuery: CarsQuery;
   onApply: (query: CarsQuery) => void;
+  onDraftChange?: (query: CarsQuery) => void;
   resultCount?: number;
+  isCounting?: boolean;
 }
 
-export function FiltersPanel({ initialQuery, onApply, resultCount = 0 }: FiltersPanelProps) {
+export function FiltersPanel({
+  initialQuery,
+  onApply,
+  onDraftChange,
+  resultCount = 0,
+  isCounting = false,
+}: FiltersPanelProps) {
   const [draft, setDraft] = useState<CarsQuery>(initialQuery);
 
   useEffect(() => {
     setDraft(initialQuery);
   }, [initialQuery]);
+
+  useEffect(() => {
+    onDraftChange?.(draft);
+  }, [draft, onDraftChange]);
 
   const setField = (key: keyof CarsQuery, value: string) => {
     const numericKeys = new Set([
@@ -54,12 +66,14 @@ export function FiltersPanel({ initialQuery, onApply, resultCount = 0 }: Filters
   };
 
   const reset = () => {
-    onApply({
+    const resetQuery: CarsQuery = {
       page: 1,
       limit: initialQuery.limit ?? 24,
       sortBy: initialQuery.sortBy ?? "createdAt",
       sortOrder: initialQuery.sortOrder ?? "desc",
-    });
+    };
+    setDraft(resetQuery);
+    onApply(resetQuery);
   };
 
   return (
@@ -163,8 +177,19 @@ export function FiltersPanel({ initialQuery, onApply, resultCount = 0 }: Filters
           <Button variant="ghost" onClick={reset}>
             Reset
           </Button>
-          <Button onClick={() => onApply({ ...draft, page: 1 })}>
-            Show {resultCount} cars
+          <Button
+            aria-busy={isCounting}
+            onClick={() => onApply({ ...draft, page: 1 })}
+          >
+            <span className="inline-flex items-center gap-2">
+              <span>Show {resultCount} cars</span>
+              {isCounting ? (
+                <span className="inline-flex items-center gap-1 text-xs text-black/70">
+                  <span className="h-3 w-3 animate-spin rounded-full border border-black/25 border-t-black/70" />
+                  Updating
+                </span>
+              ) : null}
+            </span>
           </Button>
         </div>
       </div>

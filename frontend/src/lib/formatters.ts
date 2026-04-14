@@ -31,13 +31,13 @@ export function convertRubToYen(value: number | null | undefined): number | unde
 
 export function formatPriceRubFromYen(value: number | null | undefined): string {
   if (value === null || value === undefined) {
-    return "N/A";
+    return "Negotiable";
   }
 
   const rubValue = convertYenToRub(value);
 
   if (rubValue === undefined) {
-    return "N/A";
+    return "Negotiable";
   }
 
   return new Intl.NumberFormat("ru-RU", {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,11 @@ import { convertRubToYen, convertYenToRub } from "@/lib/formatters";
 import { CarCard } from "./car-card";
 import { FiltersPanel } from "./filters-panel";
 
-const sortOptions: Array<{ label: string; sortBy: CarsSortBy; sortOrder: SortOrder }> = [
+const sortOptions: Array<{
+  label: string;
+  sortBy: CarsSortBy;
+  sortOrder: SortOrder;
+}> = [
   { label: "Price low to high", sortBy: "priceYen", sortOrder: "asc" },
   { label: "Price high to low", sortBy: "priceYen", sortOrder: "desc" },
   { label: "Mileage low to high", sortBy: "mileageKm", sortOrder: "asc" },
@@ -29,7 +33,10 @@ export function CarsCatalogClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const query = useMemo(() => parseCarsQuery(new URLSearchParams(searchParams)), [searchParams]);
+  const query = useMemo(
+    () => parseCarsQuery(new URLSearchParams(searchParams)),
+    [searchParams],
+  );
 
   const queryResult = useQuery({
     queryKey: ["cars", query],
@@ -55,6 +62,40 @@ export function CarsCatalogClient() {
     }),
     [query],
   );
+  const [draftFiltersQuery, setDraftFiltersQuery] =
+    useState<CarsQuery>(filtersQuery);
+  const [debouncedDraftFiltersQuery, setDebouncedDraftFiltersQuery] =
+    useState<CarsQuery>(filtersQuery);
+
+  useEffect(() => {
+    setDraftFiltersQuery(filtersQuery);
+  }, [filtersQuery]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setDebouncedDraftFiltersQuery(draftFiltersQuery);
+    }, 800);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [draftFiltersQuery]);
+
+  const countPreviewQuery = useMemo(
+    () => ({
+      ...debouncedDraftFiltersQuery,
+      priceMin: convertRubToYen(debouncedDraftFiltersQuery.priceMin),
+      priceMax: convertRubToYen(debouncedDraftFiltersQuery.priceMax),
+      page: 1,
+      limit: 12,
+    }),
+    [debouncedDraftFiltersQuery],
+  );
+  const countPreviewResult = useQuery({
+    queryKey: ["cars-count-preview", countPreviewQuery],
+    queryFn: () => getCars(countPreviewQuery),
+    placeholderData: keepPreviousData,
+  });
 
   const applyFilters = (next: CarsQuery) => {
     updateQuery({
@@ -69,10 +110,14 @@ export function CarsCatalogClient() {
       <section className="space-y-4 ">
         <FiltersPanel
           initialQuery={filtersQuery}
+          onDraftChange={setDraftFiltersQuery}
           onApply={(next) => {
             applyFilters(next);
           }}
-          resultCount={queryResult.data?.meta.total ?? 0}
+          resultCount={
+            countPreviewResult.data?.meta.total ?? queryResult.data?.meta.total ?? 0
+          }
+          isCounting={countPreviewResult.isFetching}
         />
 
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -81,7 +126,9 @@ export function CarsCatalogClient() {
           </p>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
-              <span className="text-sm text-text-secondary">Sort by:</span>
+              <span className="whitespace-nowrap text-sm text-text-secondary">
+                Sort by:
+              </span>
               <Select
                 className="min-w-[190px] bg-white"
                 value={selectedSort}
@@ -104,7 +151,9 @@ export function CarsCatalogClient() {
               </Select>
             </div>
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
-              <span className="text-sm text-text-secondary">Items per page:</span>
+              <span className=" whitespace-nowrap text-sm text-text-secondary">
+                Items per page:
+              </span>
               <Select
                 className="min-w-[120px] bg-white"
                 value={String(query.limit ?? 24)}
@@ -122,44 +171,56 @@ export function CarsCatalogClient() {
           </div>
         </div>
 
-          {queryResult.isLoading ? (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {Array.from({ length: 6 }).map((_, idx) => (
-                <Card key={idx} className="h-[390px] animate-pulse bg-surface-alt" />
-              ))}
-            </div>
-          ) : null}
+        {queryResult.isLoading ? (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <Card
+                key={idx}
+                className="h-[390px] animate-pulse bg-surface-alt"
+              />
+            ))}
+          </div>
+        ) : null}
 
-          {queryResult.isError ? (
-            <Card>
-              <p className="text-danger">Failed to load cars. Please try again.</p>
-              <Button className="mt-3" variant="secondary" onClick={() => queryResult.refetch()}>
-                Retry
-              </Button>
-            </Card>
-          ) : null}
+        {queryResult.isError ? (
+          <Card>
+            <p className="text-danger">
+              Failed to load cars. Please try again.
+            </p>
+            <Button
+              className="mt-3"
+              variant="secondary"
+              onClick={() => queryResult.refetch()}
+            >
+              Retry
+            </Button>
+          </Card>
+        ) : null}
 
-          {!queryResult.isLoading && !queryResult.isError && cards.length === 0 ? (
-            <Card>
-              <p className="text-text-secondary">No cars match your current filters.</p>
-            </Card>
-          ) : null}
+        {!queryResult.isLoading &&
+        !queryResult.isError &&
+        cards.length === 0 ? (
+          <Card>
+            <p className="text-text-secondary">
+              No cars match your current filters.
+            </p>
+          </Card>
+        ) : null}
 
-          {!queryResult.isLoading && !queryResult.isError && cards.length > 0 ? (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {cards.map((car) => (
-                <CarCard key={car.id} car={car} />
-              ))}
-            </div>
-          ) : null}
+        {!queryResult.isLoading && !queryResult.isError && cards.length > 0 ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {cards.map((car) => (
+              <CarCard key={car.id} car={car} />
+            ))}
+          </div>
+        ) : null}
 
-          <Pagination
-            currentPage={queryResult.data?.meta.page ?? query.page ?? 1}
-            totalPages={queryResult.data?.meta.totalPages ?? 1}
-            onChange={(page) => updateQuery({ page })}
-          />
+        <Pagination
+          currentPage={queryResult.data?.meta.page ?? query.page ?? 1}
+          totalPages={queryResult.data?.meta.totalPages ?? 1}
+          onChange={(page) => updateQuery({ page })}
+        />
       </section>
-
     </div>
   );
 }
