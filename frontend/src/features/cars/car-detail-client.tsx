@@ -99,7 +99,10 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
       </Link>
       <div className="grid w-full gap-4 lg:grid-cols-[minmax(0,1fr)_470px] xl:grid-cols-[minmax(0,1fr)_500px]">
         <section className="space-y-2 p-0">
-          <Card className="overflow-hidden border-[#d8d3c6] p-0">
+          <Card
+            className="overflow-hidden border-[#d8d3c6] p-0!"
+            style={{ padding: 0 }}
+          >
             <div className="relative h-[260px] w-full bg-[#f4f4f4] sm:h-[320px] md:h-[360px] lg:h-[380px] xl:h-[700px] p-0">
               <Image
                 src={activePhoto}
