@@ -115,9 +115,17 @@ export function CarsCatalogClient() {
             applyFilters(next);
           }}
           resultCount={
-            countPreviewResult.data?.meta.total ?? queryResult.data?.meta.total ?? 0
+            countPreviewResult.data?.meta.total ??
+            queryResult.data?.meta.total ??
+            0
           }
           isCounting={countPreviewResult.isFetching}
+        />
+
+        <Pagination
+          currentPage={queryResult.data?.meta.page ?? query.page ?? 1}
+          totalPages={queryResult.data?.meta.totalPages ?? 1}
+          onChange={(page) => updateQuery({ page })}
         />
 
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

@@ -1,5 +1,3 @@
-import { Button } from "./button";
-
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -7,15 +5,19 @@ interface PaginationProps {
 }
 
 function buildPages(currentPage: number, totalPages: number): number[] {
-  const pages = new Set<number>();
-  pages.add(1);
-  pages.add(totalPages);
-  for (let i = currentPage - 2; i <= currentPage + 2; i += 1) {
-    if (i >= 1 && i <= totalPages) {
-      pages.add(i);
-    }
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, idx) => idx + 1);
   }
-  return Array.from(pages).sort((a, b) => a - b);
+
+  if (currentPage <= 4) {
+    return [1, 2, 3, 4, 5, totalPages];
+  }
+
+  if (currentPage >= totalPages - 3) {
+    return [1, totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  }
+
+  return [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
 }
 
 export function Pagination({ currentPage, totalPages, onChange }: PaginationProps) {
@@ -24,39 +26,52 @@ export function Pagination({ currentPage, totalPages, onChange }: PaginationProp
   }
 
   const pages = buildPages(currentPage, totalPages);
+  const arrowButtonClassName =
+    "inline-flex h-9 w-9 items-center justify-center rounded-full border text-sm font-medium transition-colors";
+  const pageButtonClassName =
+    "inline-flex h-9 min-w-9 items-center justify-center rounded-full border px-3 text-sm font-medium transition-colors";
 
   return (
-    <nav className="flex flex-wrap items-center gap-2">
-      <Button
-        variant="secondary"
+    <nav className="flex flex-wrap items-center justify-center gap-2">
+      <button
+        type="button"
+        aria-label="Previous page"
         disabled={currentPage <= 1}
+        className={`${arrowButtonClassName} border-border bg-surface text-text-primary hover:border-accent/60 hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-40`}
         onClick={() => onChange(currentPage - 1)}
       >
-        Prev
-      </Button>
+        &#8249;
+      </button>
       {pages.map((page, idx) => {
         const prev = pages[idx - 1];
         const showDots = prev && page - prev > 1;
         return (
           <span key={page} className="flex items-center gap-2">
-            {showDots ? <span className="px-1 text-text-secondary">...</span> : null}
-            <Button
-              variant={page === currentPage ? "primary" : "secondary"}
-              className="min-w-11"
+            {showDots ? <span className="px-2 text-sm text-text-secondary">...</span> : null}
+            <button
+              type="button"
+              aria-current={page === currentPage ? "page" : undefined}
+              className={
+                page === currentPage
+                  ? `${pageButtonClassName} border-accent bg-accent text-black`
+                  : `${pageButtonClassName} border-border bg-surface text-text-primary hover:border-accent/60 hover:text-text-primary`
+              }
               onClick={() => onChange(page)}
             >
               {page}
-            </Button>
+            </button>
           </span>
         );
       })}
-      <Button
-        variant="secondary"
+      <button
+        type="button"
+        aria-label="Next page"
         disabled={currentPage >= totalPages}
+        className={`${arrowButtonClassName} border-border bg-surface text-text-primary hover:border-accent/60 hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-40`}
         onClick={() => onChange(currentPage + 1)}
       >
-        Next
-      </Button>
+        &#8250;
+      </button>
     </nav>
   );
 }
