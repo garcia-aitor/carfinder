@@ -13,6 +13,8 @@ import { normalizeImageUrl } from "@/lib/images/normalize-image-url";
 
 const fallbackImage =
   "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80";
+const imageBlurDataURL =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='8' height='8' fill='%23f3f2ee'/%3E%3C/svg%3E";
 
 interface CarDetailClientProps {
   id: string;
@@ -105,6 +107,8 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
                 fill
                 style={{ padding: "0 !important" }}
                 className="rounded-2xl object-cover p-0"
+                placeholder="blur"
+                blurDataURL={imageBlurDataURL}
                 unoptimized={true}
                 priority
               />
@@ -153,6 +157,8 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
                   fill
                   unoptimized={true}
                   className="object-cover"
+                  placeholder="blur"
+                  blurDataURL={imageBlurDataURL}
                   sizes="140px"
                 />
               </button>

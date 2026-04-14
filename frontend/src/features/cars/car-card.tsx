@@ -7,6 +7,8 @@ import { normalizeImageUrl } from "@/lib/images/normalize-image-url";
 
 const placeholderImage =
   "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80";
+const imageBlurDataURL =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='8' height='8' fill='%23f3f2ee'/%3E%3C/svg%3E";
 
 interface CarCardProps {
   car: CarViewModel;
@@ -27,6 +29,8 @@ export function CarCard({ car }: CarCardProps) {
             alt={car.title}
             fill
             className="object-cover"
+            placeholder="blur"
+            blurDataURL={imageBlurDataURL}
             unoptimized={true}
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
           />
