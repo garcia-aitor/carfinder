@@ -179,17 +179,17 @@ export function FiltersPanel({
           </Button>
           <Button
             aria-busy={isCounting}
+            className="min-w-[170px] justify-center"
             onClick={() => onApply({ ...draft, page: 1 })}
           >
-            <span className="inline-flex items-center gap-2">
-              <span>Show {resultCount} cars</span>
-              {isCounting ? (
-                <span className="inline-flex items-center gap-1 text-xs text-black/70">
-                  <span className="h-3 w-3 animate-spin rounded-full border border-black/25 border-t-black/70" />
-                  Updating
-                </span>
-              ) : null}
-            </span>
+            {isCounting ? (
+              <span
+                className="h-3 w-3 animate-spin rounded-full border border-black/25 border-t-black/70"
+                aria-hidden="true"
+              />
+            ) : (
+              `Show ${resultCount} cars`
+            )}
           </Button>
         </div>
       </div>

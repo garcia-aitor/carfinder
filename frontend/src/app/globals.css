@@ -46,6 +46,14 @@ button {
   outline: none;
 }
 
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 input:focus-visible,
 select:focus-visible,
 button:focus-visible {

@@ -27,9 +27,9 @@ export function Pagination({ currentPage, totalPages, onChange }: PaginationProp
 
   const pages = buildPages(currentPage, totalPages);
   const arrowButtonClassName =
-    "inline-flex h-9 w-9 items-center justify-center rounded-full border text-sm font-medium transition-colors";
+    "inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border text-sm font-medium transition-colors";
   const pageButtonClassName =
-    "inline-flex h-9 min-w-9 items-center justify-center rounded-full border px-3 text-sm font-medium transition-colors";
+    "inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-full border px-3 text-sm font-medium transition-colors";
 
   return (
     <nav className="flex flex-wrap items-center justify-center gap-2">
