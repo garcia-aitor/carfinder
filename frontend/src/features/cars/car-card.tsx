@@ -43,7 +43,7 @@ export function CarCard({ car }: CarCardProps) {
             <p className="text-m font-bold uppercase tracking-wide text-text-secondary">
               {car.brandLabel}
             </p>
-            <h3 className="line-clamp-2 text-xl font-extrabold uppercase leading-tight text-[#1a1a1a]">
+            <h3 className="line-clamp-1 text-xl font-extrabold uppercase leading-tight text-[#1a1a1a]">
               {car.modelLabel}
             </h3>
             <p className="text-xs text-text-secondary">{car.yearLabel}</p>

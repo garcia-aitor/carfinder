@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,6 @@ const sortOptions: Array<{ label: string; sortBy: CarsSortBy; sortOrder: SortOrd
 export function CarsCatalogClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const query = useMemo(() => parseCarsQuery(new URLSearchParams(searchParams)), [searchParams]);
 
@@ -68,38 +67,41 @@ export function CarsCatalogClient() {
 
   return (
     <div className="space-y-5">
-      <section className="space-y-4">
+      <section className="space-y-4 ">
+        <FiltersPanel
+          initialQuery={filtersQuery}
+          onApply={(next) => {
+            applyFilters(next);
+          }}
+          resultCount={queryResult.data?.meta.total ?? 0}
+        />
+
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <p className="text-lg font-semibold text-[#1d1d1d]">
             Cars found: {queryResult.data?.meta.total ?? 0}
           </p>
-          <div className="flex items-center gap-2">
-            <Button variant="secondary" onClick={() => setFiltersOpen(true)}>
-              Filters
-            </Button>
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
-              <span className="text-sm text-text-secondary">Sort by:</span>
-              <Select
-                className="min-w-[190px] bg-white"
-                value={selectedSort}
-                onChange={(event) => {
-                  const [sortBy, sortOrder] = event.target.value.split(":") as [
-                    CarsSortBy,
-                    SortOrder,
-                  ];
-                  updateQuery({ sortBy, sortOrder, page: 1 });
-                }}
-              >
-                {sortOptions.map((option) => (
-                  <option
-                    key={`${option.sortBy}:${option.sortOrder}`}
-                    value={`${option.sortBy}:${option.sortOrder}`}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
-            </div>
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
+            <span className="text-sm text-text-secondary">Sort by:</span>
+            <Select
+              className="min-w-[190px] bg-white"
+              value={selectedSort}
+              onChange={(event) => {
+                const [sortBy, sortOrder] = event.target.value.split(":") as [
+                  CarsSortBy,
+                  SortOrder,
+                ];
+                updateQuery({ sortBy, sortOrder, page: 1 });
+              }}
+            >
+              {sortOptions.map((option) => (
+                <option
+                  key={`${option.sortBy}:${option.sortOrder}`}
+                  value={`${option.sortBy}:${option.sortOrder}`}
+                >
+                  {option.label}
+                </option>
+              ))}
+            </Select>
           </div>
         </div>
 
@@ -141,23 +143,6 @@ export function CarsCatalogClient() {
           />
       </section>
 
-      {filtersOpen ? (
-        <div className="fixed inset-0 z-50 bg-black/65 p-4">
-          <div className="mx-auto mt-10 max-w-md">
-            <FiltersPanel
-              initialQuery={filtersQuery}
-              onApply={(next) => {
-                applyFilters(next);
-                setFiltersOpen(false);
-              }}
-              compact
-            />
-            <Button className="mt-3 w-full" variant="secondary" onClick={() => setFiltersOpen(false)}>
-              Close
-            </Button>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }
