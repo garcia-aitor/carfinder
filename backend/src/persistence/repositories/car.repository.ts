@@ -4,6 +4,74 @@ import { PrismaService } from "../prisma/prisma.service";
 import { CarRecord } from "../../scraper/types";
 import { CarsSortBy, QueryCarsDto, SortOrder } from "../../cars/dto/query-cars.dto";
 
+const BRAND_SEARCH_GROUPS = [
+  ["toyota", "トヨタ"],
+  ["nissan", "日産", "ニッサン"],
+  ["honda", "ホンダ"],
+  ["mazda", "マツダ"],
+  ["subaru", "スバル"],
+  ["mitsubishi", "三菱", "ミツビシ"],
+  ["suzuki", "スズキ"],
+  ["daihatsu", "ダイハツ"],
+  ["lexus", "レクサス"],
+  ["isuzu", "いすゞ", "イスズ"],
+  [
+    "mercedes-benz",
+    "mercedes benz",
+    "mercedes",
+    "ベンツ",
+    "メルセデス ベンツ",
+    "メルセデス・ベンツ",
+  ],
+  ["bmw", "ＢＭＷ", "ビーエムダブリュー"],
+  ["audi", "アウディ"],
+  ["volkswagen", "vw", "フォルクスワーゲン"],
+  ["porsche", "ポルシェ"],
+  ["tesla", "テスラ"],
+  ["ford", "フォード"],
+  ["chevrolet", "シボレー"],
+] as const;
+
+function normalizeSearchText(value: string): string {
+  return value
+    .normalize("NFKC")
+    .replace(/[・･·]/g, " ")
+    .replace(/[-‐‑‒–—―]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function expandBrandSearchTerms(brand: string): string[] {
+  const normalizedInput = normalizeSearchText(brand);
+  if (!normalizedInput) {
+    return [];
+  }
+
+  const terms = new Set([brand.trim()]);
+  for (const group of BRAND_SEARCH_GROUPS) {
+    const normalizedGroup = group.map(normalizeSearchText);
+    const hasMatch = normalizedGroup.some(
+      (alias) => alias.includes(normalizedInput) || normalizedInput.includes(alias),
+    );
+
+    if (hasMatch) {
+      group.forEach((alias) => terms.add(alias));
+    }
+  }
+
+  return [...terms].filter(Boolean);
+}
+
+function buildBrandContainsFilter(term: string): Prisma.CarWhereInput {
+  return {
+    brand: {
+      contains: term,
+      mode: Prisma.QueryMode.insensitive,
+    },
+  };
+}
+
 @Injectable()
 export class CarRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -122,18 +190,14 @@ export class CarRepository {
 
   private buildWhere(query: QueryCarsDto): Prisma.CarWhereInput {
     const where: Prisma.CarWhereInput = {};
+    const andFilters: Prisma.CarWhereInput[] = [];
 
     if (query.brand) {
-      where.brand = {
-        contains: query.brand,
-        mode: Prisma.QueryMode.insensitive,
-      };
-    }
-    if (query.model) {
-      where.model = {
-        contains: query.model,
-        mode: Prisma.QueryMode.insensitive,
-      };
+      const brandSearchTerms = expandBrandSearchTerms(query.brand);
+
+      andFilters.push({
+        OR: brandSearchTerms.map((term) => buildBrandContainsFilter(term)),
+      });
     }
     if (query.isAvailable !== undefined) {
       where.isAvailable = query.isAvailable;
@@ -167,6 +231,10 @@ export class CarRepository {
       if (query.mileageMax !== undefined) {
         where.mileageKm.lte = query.mileageMax;
       }
+    }
+
+    if (andFilters.length > 0) {
+      where.AND = andFilters;
     }
 
     return where;

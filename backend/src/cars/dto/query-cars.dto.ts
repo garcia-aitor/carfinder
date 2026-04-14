@@ -45,10 +45,6 @@ export class QueryCarsDto {
   brand?: string;
 
   @IsOptional()
-  @IsString()
-  model?: string;
-
-  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1900)

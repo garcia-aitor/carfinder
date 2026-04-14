@@ -55,7 +55,6 @@ export type SortOrder = "asc" | "desc";
 
 export interface CarsQuery {
   brand?: string;
-  model?: string;
   yearFrom?: number;
   yearTo?: number;
   priceMin?: number;

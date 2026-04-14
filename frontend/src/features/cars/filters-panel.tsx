@@ -86,12 +86,7 @@ export function FiltersPanel({
             value={draft.brand ?? ""}
             onChange={(event) => setField("brand", event.target.value)}
           />
-          <Input
-            className="h-11 rounded-xl border-[#ece7db] bg-white"
-            placeholder="Model"
-            value={draft.model ?? ""}
-            onChange={(event) => setField("model", event.target.value)}
-          />
+
           <Input
             className="h-11 rounded-xl border-[#ece7db] bg-white"
             type="number"
@@ -160,7 +155,11 @@ export function FiltersPanel({
           <Select
             className="h-11 rounded-xl border-[#ece7db] bg-white"
             value={
-              draft.isAvailable === undefined ? "any" : draft.isAvailable ? "true" : "false"
+              draft.isAvailable === undefined
+                ? "any"
+                : draft.isAvailable
+                  ? "true"
+                  : "false"
             }
             onChange={(event) => setField("isAvailable", event.target.value)}
           >

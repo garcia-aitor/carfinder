@@ -51,7 +51,6 @@ export function parseCarsQuery(params: URLSearchParams): CarsQuery {
 
   return {
     brand: params.get("brand") || undefined,
-    model: params.get("model") || undefined,
     yearFrom: toNumber(params.get("yearFrom")),
     yearTo: toNumber(params.get("yearTo")),
     priceMin: toNumber(params.get("priceMin")),
