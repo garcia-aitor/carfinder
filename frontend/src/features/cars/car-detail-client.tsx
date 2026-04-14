@@ -89,7 +89,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full max-w-full min-w-0 space-y-4 overflow-x-clip">
       <Link
         href="/cars"
         className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:border-accent/50 hover:text-text-primary"
@@ -97,8 +97,8 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
         <span aria-hidden="true">←</span>
         <span>Back to catalog</span>
       </Link>
-      <div className="grid w-full gap-8 lg:grid-cols-[minmax(0,1fr)_400px] xl:grid-cols-[minmax(0,1fr)_700px]">
-        <section className="space-y-2 p-0">
+      <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_400px] xl:grid-cols-[minmax(0,1fr)_700px]">
+        <section className="min-w-0 space-y-2 p-0">
           <Card
             className="overflow-hidden border-[#d8d3c6] p-0!"
             style={{ padding: 0 }}
@@ -141,7 +141,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
             </div>
           </Card>
 
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="-mx-1 flex max-w-full gap-2 overflow-x-auto overflow-y-hidden pb-1 [scrollbar-gutter:stable]">
             {galleryPhotos.slice(0, 12).map((photo, idx) => (
               <button
                 key={`${photo}-${idx}`}
@@ -169,7 +169,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
           </div>
         </section>
 
-        <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
+        <aside className="min-w-0 space-y-3 lg:sticky lg:top-20 lg:self-start">
           <Card className="space-y-3 border-none bg-[#fafafa]!">
             <div className="flex flex-wrap items-center gap-2">
               <Badge
@@ -182,11 +182,11 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
               <Badge variant="accent">{view.yearLabel}</Badge>
             </div>
 
-            <div className="space-y-1">
-              <p className="text-[42px] font-black uppercase leading-[0.95] tracking-tight text-[#111]">
+            <div className="min-w-0 space-y-1">
+              <p className="wrap-break-word text-[42px] font-black uppercase leading-[0.95] tracking-tight text-[#111]">
                 {displayBrand}
               </p>
-              <p className="text-[46px] font-black uppercase leading-[0.95] tracking-tight text-accent">
+              <p className="wrap-break-word text-[46px] font-black uppercase leading-[0.95] tracking-tight text-accent">
                 {displayModel}
               </p>
               <p className="pt-1 text-base text-text-secondary">
@@ -198,7 +198,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
               <p className="text-xs uppercase tracking-wide text-white/60">
                 Price
               </p>
-              <p className="text-5xl font-black text-white">
+              <p className="wrap-break-word text-5xl font-black text-white">
                 {view.priceLabel}
               </p>
               <Link
@@ -217,33 +217,33 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
               Specifications
             </h2>
             <dl className="mt-4 space-y-3 text-sm">
-              <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                <dt className="text-text-secondary">Mileage</dt>
-                <dd className="font-semibold text-[#1f1f1f]">
+              <div className="flex min-w-0 items-start justify-between gap-3 border-b border-border/60 pb-2">
+                <dt className="shrink-0 text-text-secondary">Mileage</dt>
+                <dd className="min-w-0 wrap-break-word text-right font-semibold text-[#1f1f1f]">
                   {view.mileageLabel}
                 </dd>
               </div>
-              <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                <dt className="text-text-secondary">Engine</dt>
-                <dd className="font-semibold text-[#1f1f1f]">
+              <div className="flex min-w-0 items-start justify-between gap-3 border-b border-border/60 pb-2">
+                <dt className="shrink-0 text-text-secondary">Engine</dt>
+                <dd className="min-w-0 wrap-break-word text-right font-semibold text-[#1f1f1f]">
                   {view.engineLabel}
                 </dd>
               </div>
-              <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                <dt className="text-text-secondary">Color</dt>
-                <dd className="font-semibold text-[#1f1f1f]">
+              <div className="flex min-w-0 items-start justify-between gap-3 border-b border-border/60 pb-2">
+                <dt className="shrink-0 text-text-secondary">Color</dt>
+                <dd className="min-w-0 wrap-break-word text-right font-semibold text-[#1f1f1f]">
                   {view.colorLabel}
                 </dd>
               </div>
-              <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                <dt className="text-text-secondary">Model</dt>
-                <dd className="font-semibold text-[#1f1f1f]">
+              <div className="flex min-w-0 items-start justify-between gap-3 border-b border-border/60 pb-2">
+                <dt className="shrink-0 text-text-secondary">Model</dt>
+                <dd className="min-w-0 wrap-break-word text-right font-semibold text-[#1f1f1f]">
                   {view.modelLabel}
                 </dd>
               </div>
-              <div className="flex items-center justify-between">
-                <dt className="text-text-secondary">Seller</dt>
-                <dd className="font-semibold text-[#1f1f1f]">
+              <div className="flex min-w-0 items-start justify-between gap-3">
+                <dt className="shrink-0 text-text-secondary">Seller</dt>
+                <dd className="min-w-0 wrap-break-word text-right font-semibold text-[#1f1f1f]">
                   {view.sellerName}
                 </dd>
               </div>
