@@ -43,33 +43,42 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
   }
 
   const view = mapCarToViewModel(query.data.data);
-  const photos =
-    view.photoUrls.length > 0
-      ? view.photoUrls
-      : [view.mainPhotoUrl ?? fallbackImage];
+  const photos = [
+    view.mainPhotoUrl,
+    ...view.photoUrls,
+  ].filter((photo): photo is string => Boolean(photo));
+  const uniquePhotos = Array.from(new Set(photos));
+  const galleryPhotos =
+    uniquePhotos.length > 0 ? uniquePhotos : [fallbackImage];
   const ctaClassName =
     "inline-flex h-11 items-center justify-center rounded-md px-4 text-sm font-semibold transition-colors";
-  const activePhotoIndex = selectedPhotoUrl ? photos.indexOf(selectedPhotoUrl) : -1;
-  const normalizedActivePhotoIndex = activePhotoIndex >= 0 ? activePhotoIndex : 0;
-  const activePhoto = photos[normalizedActivePhotoIndex] ?? photos[0] ?? fallbackImage;
-  const canSlide = photos.length > 1;
+  const activePhotoIndex = selectedPhotoUrl
+    ? galleryPhotos.indexOf(selectedPhotoUrl)
+    : -1;
+  const normalizedActivePhotoIndex =
+    activePhotoIndex >= 0 ? activePhotoIndex : 0;
+  const activePhoto =
+    galleryPhotos[normalizedActivePhotoIndex] ??
+    galleryPhotos[0] ??
+    fallbackImage;
+  const canSlide = galleryPhotos.length > 1;
 
   const showPreviousPhoto = () => {
     setSelectedPhotoUrl((current) => {
-      const currentIndex = current ? photos.indexOf(current) : 0;
+      const currentIndex = current ? galleryPhotos.indexOf(current) : 0;
       const safeIndex = currentIndex >= 0 ? currentIndex : 0;
       if (safeIndex === 0) {
-        return photos[photos.length - 1] ?? null;
+        return galleryPhotos[galleryPhotos.length - 1] ?? null;
       }
-      return photos[safeIndex - 1] ?? null;
+      return galleryPhotos[safeIndex - 1] ?? null;
     });
   };
 
   const showNextPhoto = () => {
     setSelectedPhotoUrl((current) => {
-      const currentIndex = current ? photos.indexOf(current) : 0;
+      const currentIndex = current ? galleryPhotos.indexOf(current) : 0;
       const safeIndex = currentIndex >= 0 ? currentIndex : 0;
-      return photos[(safeIndex + 1) % photos.length] ?? null;
+      return galleryPhotos[(safeIndex + 1) % galleryPhotos.length] ?? null;
     });
   };
 
@@ -82,8 +91,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
             alt={view.title}
             fill
             className="rounded-xl object-cover"
-            sizes="(max-width: 768px) 100vw, 1100px"
-            quality={95}
+            unoptimized={true}
             priority
           />
           {canSlide ? (
@@ -105,7 +113,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
                 &#8250;
               </button>
               <div className="absolute bottom-3 right-3 rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white">
-                {normalizedActivePhotoIndex + 1} / {photos.length}
+                {normalizedActivePhotoIndex + 1} / {galleryPhotos.length}
               </div>
             </>
           ) : null}
@@ -113,7 +121,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
       </Card>
 
       <div className="grid grid-cols-4 gap-3 md:grid-cols-6">
-        {photos.slice(0, 12).map((photo, idx) => (
+        {galleryPhotos.slice(0, 12).map((photo, idx) => (
           <button
             key={`${photo}-${idx}`}
             type="button"
@@ -129,6 +137,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
               src={photo}
               alt={`${view.title} thumbnail ${idx + 1}`}
               fill
+              unoptimized={true}
               className="object-cover"
               sizes="(max-width: 768px) 25vw, 180px"
               quality={85}
