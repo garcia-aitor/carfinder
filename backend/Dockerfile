@@ -7,12 +7,9 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy source and compile TypeScript
+# Copy source, generate Prisma client, then compile TypeScript
 COPY . .
-RUN npm run build
-
-# Generate Prisma client
-RUN npx prisma generate
+RUN npx prisma generate && npm run build
 
 # ── Production stage ──────────────────────────────────────────────────────────
 FROM node:20-alpine AS runner
