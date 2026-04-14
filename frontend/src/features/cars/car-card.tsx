@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import type { CarViewModel } from "@/lib/dictionary/car-view-model";
 import { normalizeImageUrl } from "@/lib/images/normalize-image-url";
 
@@ -22,8 +21,8 @@ export function CarCard({ car }: CarCardProps) {
       href={`/cars/${car.id}`}
       className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
     >
-      <Card className="overflow-hidden p-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
-        <div className="relative h-48 w-full bg-black/5">
+      <article className="overflow-hidden rounded-[26px] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(15,23,42,0.14)]">
+        <div className="relative h-48 w-full">
           <Image
             src={cardImage}
             alt={car.title}
@@ -77,7 +76,7 @@ export function CarCard({ car }: CarCardProps) {
             </span>
           </div>
         </div>
-      </Card>
+      </article>
     </Link>
   );
 }
