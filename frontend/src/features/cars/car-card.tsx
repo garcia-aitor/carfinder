@@ -31,11 +31,16 @@ export function CarCard({ car }: CarCardProps) {
       </Link>
       <div className="space-y-3 p-4">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant={car.statusLabel === "Available" ? "success" : "default"}>
+          <Badge
+            variant={car.statusLabel === "Available" ? "success" : "default"}
+          >
             {car.statusLabel}
           </Badge>
         </div>
         <div className="space-y-1">
+          <p className="text-m font-bold uppercase tracking-wide text-text-secondary">
+            {car.brandLabel}
+          </p>
           <h3 className="line-clamp-2 text-xl font-extrabold uppercase leading-tight text-[#1a1a1a]">
             {car.modelLabel}
           </h3>
@@ -55,7 +60,9 @@ export function CarCard({ car }: CarCardProps) {
 
         <div className="flex items-center justify-between border-t border-border pt-3">
           <div>
-            <p className="text-[10px] uppercase tracking-wide text-text-secondary">Price</p>
+            <p className="text-[10px] uppercase tracking-wide text-text-secondary">
+              Price
+            </p>
             <p className="text-2xl font-bold text-accent">{car.priceLabel}</p>
           </div>
           <Link
