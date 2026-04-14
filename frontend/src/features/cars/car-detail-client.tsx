@@ -89,14 +89,15 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
   return (
     <div className="w-full space-y-4">
       <div className="grid w-full gap-4 lg:grid-cols-[minmax(0,1fr)_470px] xl:grid-cols-[minmax(0,1fr)_500px]">
-        <section className="space-y-2">
+        <section className="space-y-2 p-0">
           <Card className="overflow-hidden border-[#d8d3c6] p-0">
-            <div className="relative h-[260px] w-full bg-[#f4f4f4] sm:h-[320px] md:h-[360px] lg:h-[380px] xl:h-[400px]">
+            <div className="relative h-[260px] w-full bg-[#f4f4f4] sm:h-[320px] md:h-[360px] lg:h-[380px] xl:h-[700px] p-0">
               <Image
                 src={activePhoto}
                 alt={view.title}
                 fill
-                className="rounded-2xl object-cover"
+                style={{ padding: "0 !important" }}
+                className="rounded-2xl object-cover p-0"
                 unoptimized={true}
                 priority
               />
@@ -172,7 +173,9 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
               <p className="text-[46px] font-black uppercase leading-[0.95] tracking-tight text-accent">
                 {displayModel}
               </p>
-              <p className="pt-1 text-base text-text-secondary">{view.yearLabel}</p>
+              <p className="pt-1 text-base text-text-secondary">
+                {view.yearLabel}
+              </p>
             </div>
 
             <div className="space-y-2 rounded-2xl bg-[#111] p-4">
@@ -200,23 +203,33 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <dt className="text-text-secondary">Mileage</dt>
-                <dd className="font-semibold text-[#1f1f1f]">{view.mileageLabel}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">
+                  {view.mileageLabel}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <dt className="text-text-secondary">Engine</dt>
-                <dd className="font-semibold text-[#1f1f1f]">{view.engineLabel}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">
+                  {view.engineLabel}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <dt className="text-text-secondary">Color</dt>
-                <dd className="font-semibold text-[#1f1f1f]">{view.colorLabel}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">
+                  {view.colorLabel}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <dt className="text-text-secondary">Model</dt>
-                <dd className="font-semibold text-[#1f1f1f]">{view.modelLabel}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">
+                  {view.modelLabel}
+                </dd>
               </div>
               <div className="flex items-center justify-between">
                 <dt className="text-text-secondary">Seller</dt>
-                <dd className="font-semibold text-[#1f1f1f]">{view.sellerName}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">
+                  {view.sellerName}
+                </dd>
               </div>
             </dl>
             <div className="mt-4 flex flex-col gap-2">
