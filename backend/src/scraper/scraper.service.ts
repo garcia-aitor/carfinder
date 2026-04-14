@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import axios from "axios/dist/node/axios.cjs";
+import axios from "axios";
 import * as cheerio from "cheerio";
 import { env } from "../config/env";
 import {

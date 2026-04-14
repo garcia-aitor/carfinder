@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios/dist/node/axios.cjs";
+import axios from "axios";
 import { getAuthToken } from "../auth/auth-store";
 
 const baseURL =
