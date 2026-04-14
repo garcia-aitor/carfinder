@@ -1,2 +1,0 @@
-[build]
-nixpacks-config = "backend/nixpacks.toml"

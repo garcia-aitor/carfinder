@@ -1,8 +1,0 @@
-[phases.install]
-cmds = ["npm install"]
-
-[phases.build]
-cmds = ["npx prisma generate"]
-
-[start]
-cmd = "node -r ts-node/register src/main.ts"
