@@ -107,7 +107,7 @@ export function CarsCatalogClient() {
 
   return (
     <div className="space-y-5">
-      <section className="space-y-4 ">
+      <section className="space-y-8">
         <FiltersPanel
           initialQuery={filtersQuery}
           onDraftChange={setDraftFiltersQuery}
@@ -216,7 +216,7 @@ export function CarsCatalogClient() {
         ) : null}
 
         {!queryResult.isLoading && !queryResult.isError && cards.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {cards.map((car) => (
               <CarCard key={car.id} car={car} />
             ))}

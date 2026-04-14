@@ -97,7 +97,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
         <span aria-hidden="true">←</span>
         <span>Back to catalog</span>
       </Link>
-      <div className="grid w-full gap-4 lg:grid-cols-[minmax(0,1fr)_470px] xl:grid-cols-[minmax(0,1fr)_500px]">
+      <div className="grid w-full gap-8 lg:grid-cols-[minmax(0,1fr)_400px] xl:grid-cols-[minmax(0,1fr)_700px]">
         <section className="space-y-2 p-0">
           <Card
             className="overflow-hidden border-[#d8d3c6] p-0!"
@@ -170,7 +170,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
         </section>
 
         <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
-          <Card className="space-y-3 border-[#dfdacd]">
+          <Card className="space-y-3 border-none bg-[#fafafa]!">
             <div className="flex flex-wrap items-center gap-2">
               <Badge
                 variant={
@@ -194,7 +194,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
               </p>
             </div>
 
-            <div className="space-y-2 rounded-2xl bg-[#111] p-4">
+            <div className="space-y-2 rounded-2xl bg-[#111] p-8">
               <p className="text-xs uppercase tracking-wide text-white/60">
                 Price
               </p>
