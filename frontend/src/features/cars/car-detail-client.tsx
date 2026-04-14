@@ -29,7 +29,11 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
     return (
       <Card>
         <p className="text-danger">Failed to load car details.</p>
-        <Button className="mt-3" variant="secondary" onClick={() => query.refetch()}>
+        <Button
+          className="mt-3"
+          variant="secondary"
+          onClick={() => query.refetch()}
+        >
           Retry
         </Button>
       </Card>
@@ -37,7 +41,12 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
   }
 
   const view = mapCarToViewModel(query.data.data);
-  const photos = view.photoUrls.length > 0 ? view.photoUrls : [view.mainPhotoUrl ?? fallbackImage];
+  const photos =
+    view.photoUrls.length > 0
+      ? view.photoUrls
+      : [view.mainPhotoUrl ?? fallbackImage];
+  const ctaClassName =
+    "inline-flex h-11 items-center justify-center rounded-md px-4 text-sm font-semibold transition-colors";
 
   return (
     <div className="space-y-5">
@@ -55,16 +64,27 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
 
       <div className="grid gap-3 sm:grid-cols-3 md:grid-cols-5">
         {photos.slice(0, 10).map((photo) => (
-          <div key={photo} className="relative h-24 overflow-hidden rounded-lg border border-border">
-            <Image src={photo} alt={view.title} fill className="object-cover" sizes="200px" />
+          <div
+            key={photo}
+            className="relative h-24 overflow-hidden rounded-lg border border-border"
+          >
+            <Image
+              src={photo}
+              alt={view.title}
+              fill
+              className="object-cover"
+              sizes="200px"
+            />
           </div>
         ))}
       </div>
 
       <Card>
         <p className="text-sm text-text-secondary">{view.brandLabel}</p>
-        <h1 className="mt-1 text-2xl font-semibold">{view.title}</h1>
-        <p className="mt-2 text-3xl font-semibold text-accent">{view.priceLabel}</p>
+        <h1 className="mt-1 text-2xl font-semibold">{view.modelLabel}</h1>
+        <p className="mt-2 text-3xl font-semibold text-accent">
+          {view.priceLabel}
+        </p>
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -90,24 +110,26 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
           <h2 className="text-lg font-semibold">Seller</h2>
           <p className="mt-4 text-sm text-text-secondary">Name</p>
           <p className="text-base">{view.sellerName}</p>
-          {view.sellerUrl ? (
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            {view.sellerUrl ? (
+              <Link
+                href={view.sellerUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={`${ctaClassName} border border-border bg-surface text-text-primary hover:bg-surface-alt`}
+              >
+                Open seller page
+              </Link>
+            ) : null}
             <Link
-              href={view.sellerUrl}
+              href={view.listingUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-4 inline-block text-sm font-semibold text-accent"
+              className={`${ctaClassName} bg-accent text-black hover:bg-accent-hover`}
             >
-              Open seller page
+              Open original listing
             </Link>
-          ) : null}
-          <Link
-            href={view.listingUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-2 inline-block text-sm font-semibold text-accent"
-          >
-            Open original listing
-          </Link>
+          </div>
         </Card>
       </div>
     </div>
