@@ -23,8 +23,9 @@ function writeCookie(name: string, value: string): void {
     return;
   }
 
-  document.cookie =
-    `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${COOKIE_TTL_SECONDS}; SameSite=Lax`;
+  const secure =
+    typeof window !== "undefined" && window.location.protocol === "https:";
+  document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${COOKIE_TTL_SECONDS}; SameSite=Lax${secure ? "; Secure" : ""}`;
 }
 
 function clearCookie(name: string): void {
@@ -32,7 +33,9 @@ function clearCookie(name: string): void {
     return;
   }
 
-  document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax`;
+  const secure =
+    typeof window !== "undefined" && window.location.protocol === "https:";
+  document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax${secure ? "; Secure" : ""}`;
 }
 
 export function getAuthToken(): string | null {

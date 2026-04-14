@@ -1,26 +1,37 @@
 "use client";
 
-import { FormEvent, Suspense, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { login } from "@/lib/api/endpoints";
-import { setAuthToken } from "@/lib/auth/auth-store";
+import { getSafeRedirectPath } from "@/lib/auth/redirect-path";
+import { getAuthToken, setAuthToken } from "@/lib/auth/auth-store";
 
 function LoginForm() {
-  const router = useRouter();
+  const pathname = usePathname();
   const params = useSearchParams();
-  const redirectTo = params.get("redirectTo") || "/cars";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (pathname !== "/login") {
+      return;
+    }
+    if (!getAuthToken()) {
+      return;
+    }
+    const target = getSafeRedirectPath(params.get("redirectTo"));
+    window.location.assign(target);
+  }, [pathname, params]);
 
   const mutation = useMutation({
     mutationFn: () => login(username, password),
     onSuccess: (data) => {
       setAuthToken(data.accessToken);
-      router.push(redirectTo);
+      window.location.assign(getSafeRedirectPath(params.get("redirectTo")));
     },
   });
 

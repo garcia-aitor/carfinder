@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getSafeRedirectPath } from "@/lib/auth/redirect-path";
 
 const TOKEN_COOKIE_KEY = "carfinder_access_token";
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ??
+  "http://localhost:3000";
 
 const protectedRoutes = ["/cars"];
 
@@ -78,6 +80,15 @@ export async function proxy(request: NextRequest) {
   const hasToken = hasUsableToken(token);
   const { pathname } = request.nextUrl;
 
+  if (pathname === "/login") {
+    if (hasToken) {
+      const redirectParam = request.nextUrl.searchParams.get("redirectTo");
+      const target = getSafeRedirectPath(redirectParam);
+      return NextResponse.redirect(new URL(target, request.url));
+    }
+    return NextResponse.next();
+  }
+
   if (isProtected(pathname) && !hasToken) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirectTo", pathname);
@@ -99,5 +110,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/cars", "/cars/:path*"],
+  matcher: ["/login", "/cars", "/cars/:path*"],
 };
