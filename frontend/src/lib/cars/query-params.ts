@@ -1,6 +1,7 @@
 import type { CarsQuery, CarsSortBy, SortOrder } from "@/lib/api/types";
 
 const DEFAULT_LIMIT = 24;
+const ALLOWED_LIMITS = new Set([12, 24, 48]);
 
 function toNumber(value: string | null): number | undefined {
   if (!value) {
@@ -42,6 +43,12 @@ function toSortOrder(value: string | null): SortOrder | undefined {
 }
 
 export function parseCarsQuery(params: URLSearchParams): CarsQuery {
+  const parsedLimit = toNumber(params.get("limit"));
+  const safeLimit =
+    parsedLimit !== undefined && ALLOWED_LIMITS.has(parsedLimit)
+      ? parsedLimit
+      : DEFAULT_LIMIT;
+
   return {
     brand: params.get("brand") || undefined,
     model: params.get("model") || undefined,
@@ -53,7 +60,7 @@ export function parseCarsQuery(params: URLSearchParams): CarsQuery {
     mileageMax: toNumber(params.get("mileageMax")),
     isAvailable: toBoolean(params.get("isAvailable")),
     page: toNumber(params.get("page")) ?? 1,
-    limit: toNumber(params.get("limit")) ?? DEFAULT_LIMIT,
+    limit: safeLimit,
     sortBy: toSortBy(params.get("sortBy")) ?? "createdAt",
     sortOrder: toSortOrder(params.get("sortOrder")) ?? "desc",
   };

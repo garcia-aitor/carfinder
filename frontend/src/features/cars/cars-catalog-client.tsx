@@ -16,8 +16,6 @@ import { CarCard } from "./car-card";
 import { FiltersPanel } from "./filters-panel";
 
 const sortOptions: Array<{ label: string; sortBy: CarsSortBy; sortOrder: SortOrder }> = [
-  { label: "Newest first", sortBy: "createdAt", sortOrder: "desc" },
-  { label: "Oldest first", sortBy: "createdAt", sortOrder: "asc" },
   { label: "Price low to high", sortBy: "priceYen", sortOrder: "asc" },
   { label: "Price high to low", sortBy: "priceYen", sortOrder: "desc" },
   { label: "Mileage low to high", sortBy: "mileageKm", sortOrder: "asc" },
@@ -25,6 +23,7 @@ const sortOptions: Array<{ label: string; sortBy: CarsSortBy; sortOrder: SortOrd
   { label: "Year new to old", sortBy: "year", sortOrder: "desc" },
   { label: "Year old to new", sortBy: "year", sortOrder: "asc" },
 ];
+const itemsPerPageOptions = [12, 24, 48] as const;
 
 export function CarsCatalogClient() {
   const router = useRouter();
@@ -80,28 +79,46 @@ export function CarsCatalogClient() {
           <p className="text-lg font-semibold text-[#1d1d1d]">
             Cars found: {queryResult.data?.meta.total ?? 0}
           </p>
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
-            <span className="text-sm text-text-secondary">Sort by:</span>
-            <Select
-              className="min-w-[190px] bg-white"
-              value={selectedSort}
-              onChange={(event) => {
-                const [sortBy, sortOrder] = event.target.value.split(":") as [
-                  CarsSortBy,
-                  SortOrder,
-                ];
-                updateQuery({ sortBy, sortOrder, page: 1 });
-              }}
-            >
-              {sortOptions.map((option) => (
-                <option
-                  key={`${option.sortBy}:${option.sortOrder}`}
-                  value={`${option.sortBy}:${option.sortOrder}`}
-                >
-                  {option.label}
-                </option>
-              ))}
-            </Select>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
+              <span className="text-sm text-text-secondary">Sort by:</span>
+              <Select
+                className="min-w-[190px] bg-white"
+                value={selectedSort}
+                onChange={(event) => {
+                  const [sortBy, sortOrder] = event.target.value.split(":") as [
+                    CarsSortBy,
+                    SortOrder,
+                  ];
+                  updateQuery({ sortBy, sortOrder, page: 1 });
+                }}
+              >
+                {sortOptions.map((option) => (
+                  <option
+                    key={`${option.sortBy}:${option.sortOrder}`}
+                    value={`${option.sortBy}:${option.sortOrder}`}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
+              <span className="text-sm text-text-secondary">Items per page:</span>
+              <Select
+                className="min-w-[120px] bg-white"
+                value={String(query.limit ?? 24)}
+                onChange={(event) => {
+                  updateQuery({ limit: Number(event.target.value), page: 1 });
+                }}
+              >
+                {itemsPerPageOptions.map((limit) => (
+                  <option key={limit} value={limit}>
+                    {limit}
+                  </option>
+                ))}
+              </Select>
+            </div>
           </div>
         </div>
 
