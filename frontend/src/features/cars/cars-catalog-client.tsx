@@ -67,29 +67,20 @@ export function CarsCatalogClient() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between rounded-xl border border-border bg-surface p-3 md:hidden">
-        <p className="text-sm text-text-secondary">
-          {queryResult.data?.meta.total ?? 0} cars found
-        </p>
-        <Button variant="secondary" onClick={() => setFiltersOpen(true)}>
-          Filters
-        </Button>
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
-        <aside className="hidden self-start lg:sticky lg:top-20 lg:block">
-          <FiltersPanel initialQuery={filtersQuery} onApply={applyFilters} />
-        </aside>
-
-        <section className="space-y-4">
-          <Card className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p className="text-sm text-text-secondary">
-              Found: <span className="text-text-primary">{queryResult.data?.meta.total ?? 0}</span>
-            </p>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <span className="text-sm text-text-secondary">Sort by</span>
+    <div className="space-y-5">
+      <section className="space-y-4">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <p className="text-lg font-semibold text-[#1d1d1d]">
+            Найдено автомобилей: {queryResult.data?.meta.total ?? 0}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" onClick={() => setFiltersOpen(true)}>
+              Фильтры
+            </Button>
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
+              <span className="text-sm text-text-secondary">Сортировать по:</span>
               <Select
+                className="min-w-[190px] bg-white"
                 value={selectedSort}
                 onChange={(event) => {
                   const [sortBy, sortOrder] = event.target.value.split(":") as [
@@ -109,10 +100,11 @@ export function CarsCatalogClient() {
                 ))}
               </Select>
             </div>
-          </Card>
+          </div>
+        </div>
 
           {queryResult.isLoading ? (
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               {Array.from({ length: 6 }).map((_, idx) => (
                 <Card key={idx} className="h-[390px] animate-pulse bg-surface-alt" />
               ))}
@@ -135,7 +127,7 @@ export function CarsCatalogClient() {
           ) : null}
 
           {!queryResult.isLoading && !queryResult.isError && cards.length > 0 ? (
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {cards.map((car) => (
                 <CarCard key={car.id} car={car} />
               ))}
@@ -147,11 +139,10 @@ export function CarsCatalogClient() {
             totalPages={queryResult.data?.meta.totalPages ?? 1}
             onChange={(page) => updateQuery({ page })}
           />
-        </section>
-      </div>
+      </section>
 
       {filtersOpen ? (
-        <div className="fixed inset-0 z-50 bg-black/65 p-4 lg:hidden">
+        <div className="fixed inset-0 z-50 bg-black/65 p-4">
           <div className="mx-auto mt-10 max-w-md">
             <FiltersPanel
               initialQuery={filtersQuery}

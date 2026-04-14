@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 type BadgeVariant = "accent" | "default" | "success";
 
 const variantClass: Record<BadgeVariant, string> = {
-  accent: "bg-accent-soft text-accent",
+  accent: "bg-accent-soft text-[#9f8542]",
   default: "bg-surface-alt text-text-secondary",
-  success: "bg-success/15 text-success",
+  success: "bg-[#e7f8ea] text-success",
 };
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {

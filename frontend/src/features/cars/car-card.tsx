@@ -16,48 +16,54 @@ export function CarCard({ car }: CarCardProps) {
   const cardImage = normalizeImageUrl(car.mainPhotoUrl) ?? placeholderImage;
 
   return (
-    <Card className="overflow-hidden p-0 transition-colors hover:bg-surface-alt">
+    <Card className="overflow-hidden p-0 transition-all hover:-translate-y-0.5 hover:shadow-md">
       <Link href={`/cars/${car.id}`} className="block">
-        <div className="relative h-52 w-full bg-black/20">
+        <div className="relative h-48 w-full bg-black/5">
           <Image
             src={cardImage}
             alt={car.title}
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            unoptimized={true}
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
           />
         </div>
       </Link>
       <div className="space-y-3 p-4">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge
-            variant={car.statusLabel === "Available" ? "success" : "default"}
-          >
+          <Badge variant={car.statusLabel === "Available" ? "success" : "default"}>
             {car.statusLabel}
           </Badge>
         </div>
-        <div>
-          <p className="text-sm text-text-secondary">{car.brandLabel}</p>
-          <Link
-            href={`/cars/${car.id}`}
-            className="mt-1 block text-lg font-semibold"
-          >
+        <div className="space-y-1">
+          <h3 className="line-clamp-2 text-xl font-extrabold uppercase leading-tight text-[#1a1a1a]">
             {car.modelLabel}
-          </Link>
+          </h3>
+          <p className="text-xs text-text-secondary">{car.yearLabel}</p>
         </div>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-text-secondary">
-          <span>Year: {car.yearLabel}</span>
-          <span>Mileage: {car.mileageLabel}</span>
-          <span>Engine: {car.engineLabel}</span>
-          <span>Color: {car.colorLabel}</span>
+
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-text-secondary">
+          <span className="flex flex-col">
+            <span>Пробег</span>
+            <span className="text-sm text-[#2a2a2a]">{car.mileageLabel}</span>
+          </span>
+          <span className="flex flex-col">
+            <span>Двигатель</span>
+            <span className="text-sm text-[#2a2a2a]">{car.engineLabel}</span>
+          </span>
         </div>
+
         <div className="flex items-center justify-between border-t border-border pt-3">
-          <p className="text-xl font-semibold text-accent">{car.priceLabel}</p>
+          <div>
+            <p className="text-[10px] uppercase tracking-wide text-text-secondary">Цена</p>
+            <p className="text-2xl font-bold text-accent">{car.priceLabel}</p>
+          </div>
           <Link
             href={`/cars/${car.id}`}
-            className="text-sm font-semibold text-text-primary"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-[#242424]"
           >
-            Details
+            Подробнее
+            <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>
