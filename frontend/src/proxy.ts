@@ -99,5 +99,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/cars/:path*"],
+  matcher: ["/cars", "/cars/:path*"],
 };

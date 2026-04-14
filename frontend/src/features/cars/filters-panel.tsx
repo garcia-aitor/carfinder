@@ -93,13 +93,13 @@ export function FiltersPanel({ initialQuery, onApply, compact = false }: Filters
         <div className="grid grid-cols-2 gap-3">
           <Input
             type="number"
-            placeholder="Price min"
+            placeholder="Price min (RUB)"
             value={draft.priceMin ?? ""}
             onChange={(event) => setField("priceMin", event.target.value)}
           />
           <Input
             type="number"
-            placeholder="Price max"
+            placeholder="Price max (RUB)"
             value={draft.priceMax ?? ""}
             onChange={(event) => setField("priceMax", event.target.value)}
           />

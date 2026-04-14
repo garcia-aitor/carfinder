@@ -11,6 +11,7 @@ import { getCars } from "@/lib/api/endpoints";
 import type { CarsQuery, CarsSortBy, SortOrder } from "@/lib/api/types";
 import { parseCarsQuery, toSearchParams } from "@/lib/cars/query-params";
 import { mapCarToViewModel } from "@/lib/dictionary/car-view-model";
+import { convertRubToYen, convertYenToRub } from "@/lib/formatters";
 import { CarCard } from "./car-card";
 import { FiltersPanel } from "./filters-panel";
 
@@ -48,6 +49,22 @@ export function CarsCatalogClient() {
 
   const selectedSort = `${query.sortBy}:${query.sortOrder}`;
   const cards = (queryResult.data?.data ?? []).map(mapCarToViewModel);
+  const filtersQuery = useMemo(
+    () => ({
+      ...query,
+      priceMin: convertYenToRub(query.priceMin),
+      priceMax: convertYenToRub(query.priceMax),
+    }),
+    [query],
+  );
+
+  const applyFilters = (next: CarsQuery) => {
+    updateQuery({
+      ...next,
+      priceMin: convertRubToYen(next.priceMin),
+      priceMax: convertRubToYen(next.priceMax),
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -62,7 +79,7 @@ export function CarsCatalogClient() {
 
       <div className="grid gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
         <aside className="hidden self-start lg:sticky lg:top-20 lg:block">
-          <FiltersPanel initialQuery={query} onApply={updateQuery} />
+          <FiltersPanel initialQuery={filtersQuery} onApply={applyFilters} />
         </aside>
 
         <section className="space-y-4">
@@ -137,9 +154,9 @@ export function CarsCatalogClient() {
         <div className="fixed inset-0 z-50 bg-black/65 p-4 lg:hidden">
           <div className="mx-auto mt-10 max-w-md">
             <FiltersPanel
-              initialQuery={query}
+              initialQuery={filtersQuery}
               onApply={(next) => {
-                updateQuery(next);
+                applyFilters(next);
                 setFiltersOpen(false);
               }}
               compact

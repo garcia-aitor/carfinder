@@ -2,7 +2,7 @@ import type { Car } from "@/lib/api/types";
 import {
   formatEngineCc,
   formatMileageKm,
-  formatPriceYen,
+  formatPriceRubFromYen,
   formatYear,
 } from "@/lib/formatters";
 import {
@@ -56,7 +56,7 @@ export function mapCarToViewModel(car: Car): CarViewModel {
     colorLabel: normalizeColor(car.color),
     yearLabel: formatYear(car.year),
     mileageLabel: formatMileageKm(car.mileageKm),
-    priceLabel: formatPriceYen(car.priceYen),
+    priceLabel: formatPriceRubFromYen(car.priceYen),
     engineLabel: formatEngineCc(car.engineCc),
     sellerName: normalizeTextOrFallback(car.sellerName),
     sellerUrl: car.sellerUrl,
