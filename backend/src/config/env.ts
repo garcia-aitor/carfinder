@@ -23,6 +23,7 @@ function toBool(value: string | undefined, fallback: boolean): boolean {
 }
 
 export const env = {
+  nodeEnv: process.env.NODE_ENV ?? "development",
   databaseUrl:
     process.env.DATABASE_URL ??
     "postgresql://postgres:postgres@localhost:5432/carfinder?schema=public",
@@ -44,6 +45,7 @@ export const env = {
     2,
   ),
   scrapeRunOnBootstrap: toBool(process.env.SCRAPE_RUN_ON_BOOTSTRAP, false),
+  enableJobs: toBool(process.env.ENABLE_JOBS, true),
   jwtSecret: process.env.JWT_SECRET ?? "change-me-in-production",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? "1d",
 };
