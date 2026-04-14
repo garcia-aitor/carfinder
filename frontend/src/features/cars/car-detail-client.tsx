@@ -88,6 +88,13 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
 
   return (
     <div className="w-full space-y-4">
+      <Link
+        href="/cars"
+        className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:border-accent/50 hover:text-text-primary"
+      >
+        <span aria-hidden="true">←</span>
+        <span>Back to catalog</span>
+      </Link>
       <div className="grid w-full gap-4 lg:grid-cols-[minmax(0,1fr)_470px] xl:grid-cols-[minmax(0,1fr)_500px]">
         <section className="space-y-2 p-0">
           <Card className="overflow-hidden border-[#d8d3c6] p-0">
