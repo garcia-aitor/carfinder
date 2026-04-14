@@ -44,25 +44,25 @@ export function CarCard({ car }: CarCardProps) {
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-text-secondary">
           <span className="flex flex-col">
-            <span>Пробег</span>
+            <span>Mileage</span>
             <span className="text-sm text-[#2a2a2a]">{car.mileageLabel}</span>
           </span>
           <span className="flex flex-col">
-            <span>Двигатель</span>
+            <span>Engine</span>
             <span className="text-sm text-[#2a2a2a]">{car.engineLabel}</span>
           </span>
         </div>
 
         <div className="flex items-center justify-between border-t border-border pt-3">
           <div>
-            <p className="text-[10px] uppercase tracking-wide text-text-secondary">Цена</p>
+            <p className="text-[10px] uppercase tracking-wide text-text-secondary">Price</p>
             <p className="text-2xl font-bold text-accent">{car.priceLabel}</p>
           </div>
           <Link
             href={`/cars/${car.id}`}
             className="inline-flex items-center gap-1 text-sm font-semibold text-[#242424]"
           >
-            Подробнее
+            Details
             <span aria-hidden="true">→</span>
           </Link>
         </div>

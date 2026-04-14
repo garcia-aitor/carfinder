@@ -33,7 +33,7 @@ export default function RootLayout({
         <AppQueryProvider>
           <div className="flex min-h-full flex-col">
             <SiteHeader />
-            <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-6">
+            <main className="w-full flex-1 px-4 py-6 md:px-6">
               {children}
             </main>
           </div>

@@ -71,14 +71,14 @@ export function CarsCatalogClient() {
       <section className="space-y-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <p className="text-lg font-semibold text-[#1d1d1d]">
-            Найдено автомобилей: {queryResult.data?.meta.total ?? 0}
+            Cars found: {queryResult.data?.meta.total ?? 0}
           </p>
           <div className="flex items-center gap-2">
             <Button variant="secondary" onClick={() => setFiltersOpen(true)}>
-              Фильтры
+              Filters
             </Button>
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
-              <span className="text-sm text-text-secondary">Сортировать по:</span>
+              <span className="text-sm text-text-secondary">Sort by:</span>
               <Select
                 className="min-w-[190px] bg-white"
                 value={selectedSort}

@@ -64,6 +64,8 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
     galleryPhotos[0] ??
     fallbackImage;
   const canSlide = galleryPhotos.length > 1;
+  const displayBrand = (view.brandLabel ?? "").toUpperCase();
+  const displayModel = (view.modelLabel ?? "").toUpperCase();
 
   const showPreviousPhoto = () => {
     setSelectedPhotoUrl((current) => {
@@ -85,16 +87,16 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="space-y-3">
-          <Card className="overflow-hidden p-0">
-            <div className="relative h-[360px] w-full bg-black md:h-[640px]">
+    <div className="w-full space-y-4">
+      <div className="grid w-full gap-4 lg:grid-cols-[minmax(0,1fr)_470px] xl:grid-cols-[minmax(0,1fr)_500px]">
+        <section className="space-y-2">
+          <Card className="overflow-hidden border-[#d8d3c6] p-0">
+            <div className="relative h-[260px] w-full bg-[#f4f4f4] sm:h-[320px] md:h-[360px] lg:h-[380px] xl:h-[400px]">
               <Image
                 src={activePhoto}
                 alt={view.title}
                 fill
-                className="rounded-xl object-contain"
+                className="rounded-2xl object-cover"
                 unoptimized={true}
                 priority
               />
@@ -130,7 +132,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
                 key={`${photo}-${idx}`}
                 type="button"
                 onClick={() => setSelectedPhotoUrl(photo)}
-                className={`relative h-20 w-24 shrink-0 overflow-hidden rounded-lg border transition md:h-24 md:w-28 ${
+                className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-md border transition md:h-16 md:w-24 ${
                   idx === normalizedActivePhotoIndex
                     ? "border-accent ring-2 ring-accent/50"
                     : "border-border hover:border-accent/70"
@@ -150,60 +152,71 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
           </div>
         </section>
 
-        <aside className="space-y-4 xl:sticky xl:top-20 xl:self-start">
-          <Card className="space-y-4">
+        <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
+          <Card className="space-y-3 border-[#dfdacd]">
             <div className="flex flex-wrap items-center gap-2">
               <Badge
-                variant={view.statusLabel === "Available" ? "success" : "default"}
+                variant={
+                  view.statusLabel === "Available" ? "success" : "default"
+                }
               >
                 {view.statusLabel}
               </Badge>
               <Badge variant="accent">{view.yearLabel}</Badge>
             </div>
 
-            <div>
-              <p className="text-sm text-text-secondary">{view.brandLabel}</p>
-              <h1 className="mt-1 text-4xl font-bold uppercase tracking-tight">
-                {view.modelLabel}
-              </h1>
+            <div className="space-y-1">
+              <p className="text-[42px] font-black uppercase leading-[0.95] tracking-tight text-[#111]">
+                {displayBrand}
+              </p>
+              <p className="text-[46px] font-black uppercase leading-[0.95] tracking-tight text-accent">
+                {displayModel}
+              </p>
+              <p className="pt-1 text-base text-text-secondary">{view.yearLabel}</p>
             </div>
 
-            <div className="space-y-3 rounded-xl bg-[#111] p-4">
-              <p className="text-xs uppercase tracking-wide text-white/60">Price</p>
-              <p className="text-4xl font-bold text-white">{view.priceLabel}</p>
+            <div className="space-y-2 rounded-2xl bg-[#111] p-4">
+              <p className="text-xs uppercase tracking-wide text-white/60">
+                Price
+              </p>
+              <p className="text-5xl font-black text-white">
+                {view.priceLabel}
+              </p>
               <Link
                 href={view.listingUrl}
                 target="_blank"
                 rel="noreferrer"
-                className={`${ctaClassName} w-full bg-accent text-black hover:bg-accent-hover`}
+                className={`${ctaClassName} mt-2 w-full bg-accent text-black hover:bg-accent-hover`}
               >
                 Get offer
               </Link>
             </div>
           </Card>
 
-          <Card>
-            <h2 className="text-lg font-semibold">Specifications</h2>
+          <Card className="border-[#dfdacd]">
+            <h2 className="border-l-2 border-accent pl-2 text-lg font-bold uppercase tracking-tight">
+              Specifications
+            </h2>
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <dt className="text-text-secondary">Mileage</dt>
-                <dd>{view.mileageLabel}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">{view.mileageLabel}</dd>
               </div>
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <dt className="text-text-secondary">Engine</dt>
-                <dd>{view.engineLabel}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">{view.engineLabel}</dd>
               </div>
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <dt className="text-text-secondary">Color</dt>
-                <dd>{view.colorLabel}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">{view.colorLabel}</dd>
               </div>
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <dt className="text-text-secondary">Model</dt>
-                <dd>{view.modelLabel}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">{view.modelLabel}</dd>
               </div>
               <div className="flex items-center justify-between">
                 <dt className="text-text-secondary">Seller</dt>
-                <dd>{view.sellerName}</dd>
+                <dd className="font-semibold text-[#1f1f1f]">{view.sellerName}</dd>
               </div>
             </dl>
             <div className="mt-4 flex flex-col gap-2">
