@@ -57,7 +57,7 @@ export function FiltersPanel({ initialQuery, onApply, compact = false }: Filters
   const reset = () => {
     onApply({
       page: 1,
-      limit: initialQuery.limit ?? 30,
+      limit: initialQuery.limit ?? 24,
       sortBy: initialQuery.sortBy ?? "createdAt",
       sortOrder: initialQuery.sortOrder ?? "desc",
     });

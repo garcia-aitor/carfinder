@@ -16,9 +16,12 @@ export function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-bg/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-black backdrop-blur">
       <div className="flex h-16 w-full items-center justify-between px-4 md:px-6">
-        <Link href="/cars" className="text-lg font-semibold tracking-wide text-text-primary">
+        <Link
+          href="/cars"
+          className="text-lg font-semibold tracking-wide text-white"
+        >
           Carfinder
         </Link>
         <div className="flex items-center gap-2">

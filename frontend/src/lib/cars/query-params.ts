@@ -1,6 +1,6 @@
 import type { CarsQuery, CarsSortBy, SortOrder } from "@/lib/api/types";
 
-const DEFAULT_LIMIT = 30;
+const DEFAULT_LIMIT = 24;
 
 function toNumber(value: string | null): number | undefined {
   if (!value) {
