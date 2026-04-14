@@ -73,7 +73,7 @@ export function FiltersPanel({
     const resetQuery: CarsQuery = {
       page: 1,
       limit: initialQuery.limit ?? 24,
-      sortBy: initialQuery.sortBy ?? "createdAt",
+      sortBy: initialQuery.sortBy ?? "firstSeenAt",
       sortOrder: initialQuery.sortOrder ?? "desc",
     };
     setDraft(resetQuery);

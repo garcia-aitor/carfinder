@@ -360,7 +360,7 @@ export class CarRepository {
   private buildOrderBy(
     query: QueryCarsDto,
   ): Prisma.CarOrderByWithRelationInput {
-    const sortBy = query.sortBy ?? CarsSortBy.CREATED_AT;
+    const sortBy = query.sortBy ?? CarsSortBy.FIRST_SEEN_AT;
     const sortOrder: Prisma.SortOrder =
       (query.sortOrder ?? SortOrder.DESC) === SortOrder.ASC ? "asc" : "desc";
 
@@ -375,6 +375,6 @@ export class CarRepository {
       [CarsSortBy.FIRST_SEEN_AT]: { firstSeenAt: sortOrder },
     };
 
-    return allowedSortFields[sortBy] ?? { createdAt: "desc" };
+    return allowedSortFields[sortBy] ?? { firstSeenAt: "desc" };
   }
 }

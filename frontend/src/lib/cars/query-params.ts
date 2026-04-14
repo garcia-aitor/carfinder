@@ -66,7 +66,7 @@ export function parseCarsQuery(params: URLSearchParams): CarsQuery {
     isAvailable: toBoolean(params.get("isAvailable")),
     page: toNumber(params.get("page")) ?? 1,
     limit: safeLimit,
-    sortBy: toSortBy(params.get("sortBy")) ?? "createdAt",
+    sortBy: toSortBy(params.get("sortBy")) ?? "firstSeenAt",
     sortOrder: toSortOrder(params.get("sortOrder")) ?? "desc",
   };
 }

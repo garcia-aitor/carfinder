@@ -103,7 +103,7 @@ export class QueryCarsDto {
 
   @IsOptional()
   @IsEnum(CarsSortBy)
-  sortBy?: CarsSortBy = CarsSortBy.CREATED_AT;
+  sortBy?: CarsSortBy = CarsSortBy.FIRST_SEEN_AT;
 
   @IsOptional()
   @IsEnum(SortOrder)

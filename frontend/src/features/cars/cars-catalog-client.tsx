@@ -20,12 +20,6 @@ const sortOptions: Array<{
   sortBy: CarsSortBy;
   sortOrder: SortOrder;
 }> = [
-  { label: "Price low to high", sortBy: "priceYen", sortOrder: "asc" },
-  { label: "Price high to low", sortBy: "priceYen", sortOrder: "desc" },
-  { label: "Mileage low to high", sortBy: "mileageKm", sortOrder: "asc" },
-  { label: "Mileage high to low", sortBy: "mileageKm", sortOrder: "desc" },
-  { label: "Year new to old", sortBy: "year", sortOrder: "desc" },
-  { label: "Year old to new", sortBy: "year", sortOrder: "asc" },
   {
     label: "First seen newest to oldest",
     sortBy: "firstSeenAt",
@@ -36,6 +30,12 @@ const sortOptions: Array<{
     sortBy: "firstSeenAt",
     sortOrder: "asc",
   },
+  { label: "Price low to high", sortBy: "priceYen", sortOrder: "asc" },
+  { label: "Price high to low", sortBy: "priceYen", sortOrder: "desc" },
+  { label: "Mileage low to high", sortBy: "mileageKm", sortOrder: "asc" },
+  { label: "Mileage high to low", sortBy: "mileageKm", sortOrder: "desc" },
+  { label: "Year new to old", sortBy: "year", sortOrder: "desc" },
+  { label: "Year old to new", sortBy: "year", sortOrder: "asc" },
 ];
 const itemsPerPageOptions = [12, 24, 48] as const;
 
