@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import type { CarsQuery } from "@/lib/api/types";
+
+const FILTERS_REGION_ID = "catalog-filters-fields";
 
 interface FiltersPanelProps {
   initialQuery: CarsQuery;
@@ -23,6 +26,7 @@ export function FiltersPanel({
   isCounting = false,
 }: FiltersPanelProps) {
   const [draft, setDraft] = useState<CarsQuery>(initialQuery);
+  const [mobileExpanded, setMobileExpanded] = useState(false);
 
   useEffect(() => {
     setDraft(initialQuery);
@@ -78,7 +82,39 @@ export function FiltersPanel({
 
   return (
     <Card className="mx-auto w-full max-w-[1500px] rounded-3xl border-[#eee8d9] p-3 shadow-none md:p-4">
-      <div className="space-y-3">
+      <button
+        type="button"
+        aria-expanded={mobileExpanded}
+        aria-controls={FILTERS_REGION_ID}
+        className="mb-3 flex w-full items-center justify-between gap-2 rounded-xl border border-[#ece7db] bg-white px-3 py-2.5 text-left text-sm font-medium text-text-primary md:hidden"
+        onClick={() => setMobileExpanded((open) => !open)}
+      >
+        <span>Filters</span>
+        <svg
+          className={cn(
+            "h-5 w-5 shrink-0 text-text-secondary transition-transform duration-200",
+            mobileExpanded && "rotate-180",
+          )}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+
+      <div
+        id={FILTERS_REGION_ID}
+        className={cn(
+          "space-y-3",
+          mobileExpanded ? "block" : "hidden",
+          "md:block",
+        )}
+      >
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-6">
           <Input
             className="h-11 rounded-xl border-[#ece7db] bg-white"
@@ -168,28 +204,28 @@ export function FiltersPanel({
             <option value="false">Only unavailable</option>
           </Select>
         </div>
-      </div>
 
-      <div className="mt-3 flex flex-col gap-2 border-t border-[#f0ecdf] pt-3 sm:flex-row sm:items-center sm:justify-between">
-        <div />
-        <div className="flex items-center gap-2 self-end sm:self-auto">
-          <Button variant="ghost" onClick={reset}>
-            Reset
-          </Button>
-          <Button
-            aria-busy={isCounting}
-            className="min-w-[170px] justify-center"
-            onClick={() => onApply({ ...draft, page: 1 })}
-          >
-            {isCounting ? (
-              <span
-                className="h-3 w-3 animate-spin rounded-full border border-black/25 border-t-black/70"
-                aria-hidden="true"
-              />
-            ) : (
-              `Show ${resultCount} cars`
-            )}
-          </Button>
+        <div className="mt-3 flex flex-col gap-2 border-t border-[#f0ecdf] pt-3 sm:flex-row sm:items-center sm:justify-between">
+          <div />
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <Button variant="ghost" onClick={reset}>
+              Reset
+            </Button>
+            <Button
+              aria-busy={isCounting}
+              className="min-w-[170px] justify-center"
+              onClick={() => onApply({ ...draft, page: 1 })}
+            >
+              {isCounting ? (
+                <span
+                  className="h-3 w-3 animate-spin rounded-full border border-black/25 border-t-black/70"
+                  aria-hidden="true"
+                />
+              ) : (
+                `Show ${resultCount} cars`
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </Card>
