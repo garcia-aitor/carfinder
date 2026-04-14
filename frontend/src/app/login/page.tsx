@@ -45,28 +45,38 @@ function LoginForm() {
         </p>
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <label className="block">
-            <span className="mb-2 block text-sm text-text-secondary">Username</span>
+            <span className="mb-2 block text-sm text-text-secondary">
+              Username
+            </span>
             <Input
               autoComplete="username"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              placeholder="admin"
+              placeholder="username"
               required
             />
           </label>
           <label className="block">
-            <span className="mb-2 block text-sm text-text-secondary">Password</span>
+            <span className="mb-2 block text-sm text-text-secondary">
+              Password
+            </span>
             <Input
               type="password"
               autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="admin123"
+              placeholder="password"
               required
             />
           </label>
-          {errorMessage ? <p className="text-sm text-danger">{errorMessage}</p> : null}
-          <Button className="w-full" type="submit" disabled={mutation.isPending}>
+          {errorMessage ? (
+            <p className="text-sm text-danger">{errorMessage}</p>
+          ) : null}
+          <Button
+            className="w-full"
+            type="submit"
+            disabled={mutation.isPending}
+          >
             {mutation.isPending ? "Signing in..." : "Sign in"}
           </Button>
         </form>
@@ -77,7 +87,11 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<Card className="mx-auto h-72 max-w-md animate-pulse bg-surface-alt" />}>
+    <Suspense
+      fallback={
+        <Card className="mx-auto h-72 max-w-md animate-pulse bg-surface-alt" />
+      }
+    >
       <LoginForm />
     </Suspense>
   );

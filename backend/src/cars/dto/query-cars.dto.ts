@@ -14,6 +14,7 @@ export enum CarsSortBy {
   MILEAGE_KM = "mileageKm",
   YEAR = "year",
   CREATED_AT = "createdAt",
+  FIRST_SEEN_AT = "firstSeenAt",
 }
 
 export enum SortOrder {

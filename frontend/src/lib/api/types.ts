@@ -50,7 +50,12 @@ export interface CarDetailResponse {
   data: Car;
 }
 
-export type CarsSortBy = "priceYen" | "mileageKm" | "year" | "createdAt";
+export type CarsSortBy =
+  | "priceYen"
+  | "mileageKm"
+  | "year"
+  | "createdAt"
+  | "firstSeenAt";
 export type SortOrder = "asc" | "desc";
 
 export interface CarsQuery {

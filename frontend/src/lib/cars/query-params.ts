@@ -25,7 +25,13 @@ function toBoolean(value: string | null): boolean | undefined {
   return undefined;
 }
 
-const sortBySet = new Set<CarsSortBy>(["createdAt", "priceYen", "mileageKm", "year"]);
+const sortBySet = new Set<CarsSortBy>([
+  "createdAt",
+  "priceYen",
+  "mileageKm",
+  "year",
+  "firstSeenAt",
+]);
 const sortOrderSet = new Set<SortOrder>(["asc", "desc"]);
 
 function toSortBy(value: string | null): CarsSortBy | undefined {

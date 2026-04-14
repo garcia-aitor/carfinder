@@ -372,6 +372,7 @@ export class CarRepository {
       [CarsSortBy.MILEAGE_KM]: { mileageKm: sortOrder },
       [CarsSortBy.YEAR]: { year: sortOrder },
       [CarsSortBy.CREATED_AT]: { createdAt: sortOrder },
+      [CarsSortBy.FIRST_SEEN_AT]: { firstSeenAt: sortOrder },
     };
 
     return allowedSortFields[sortBy] ?? { createdAt: "desc" };

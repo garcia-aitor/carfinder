@@ -26,6 +26,16 @@ const sortOptions: Array<{
   { label: "Mileage high to low", sortBy: "mileageKm", sortOrder: "desc" },
   { label: "Year new to old", sortBy: "year", sortOrder: "desc" },
   { label: "Year old to new", sortBy: "year", sortOrder: "asc" },
+  {
+    label: "First seen newest to oldest",
+    sortBy: "firstSeenAt",
+    sortOrder: "desc",
+  },
+  {
+    label: "First seen oldest to newest",
+    sortBy: "firstSeenAt",
+    sortOrder: "asc",
+  },
 ];
 const itemsPerPageOptions = [12, 24, 48] as const;
 
