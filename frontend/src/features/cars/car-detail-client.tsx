@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getCarById } from "@/lib/api/endpoints";
 import { mapCarToViewModel } from "@/lib/dictionary/car-view-model";
+import { normalizeImageUrl } from "@/lib/images/normalize-image-url";
 
 const fallbackImage =
   "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80";
@@ -44,8 +45,8 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
 
   const view = mapCarToViewModel(query.data.data);
   const photos = [
-    view.mainPhotoUrl,
-    ...view.photoUrls,
+    normalizeImageUrl(view.mainPhotoUrl),
+    ...view.photoUrls.map((photo) => normalizeImageUrl(photo)),
   ].filter((photo): photo is string => Boolean(photo));
   const uniquePhotos = Array.from(new Set(photos));
   const galleryPhotos =

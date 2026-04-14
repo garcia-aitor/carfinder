@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import type { CarViewModel } from "@/lib/dictionary/car-view-model";
+import { normalizeImageUrl } from "@/lib/images/normalize-image-url";
 
 const placeholderImage =
   "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80";
@@ -12,12 +13,14 @@ interface CarCardProps {
 }
 
 export function CarCard({ car }: CarCardProps) {
+  const cardImage = normalizeImageUrl(car.mainPhotoUrl) ?? placeholderImage;
+
   return (
     <Card className="overflow-hidden p-0 transition-colors hover:bg-surface-alt">
       <Link href={`/cars/${car.id}`} className="block">
         <div className="relative h-52 w-full bg-black/20">
           <Image
-            src={car.mainPhotoUrl ?? placeholderImage}
+            src={cardImage}
             alt={car.title}
             fill
             className="object-cover"
