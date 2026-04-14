@@ -2,34 +2,126 @@ import { Injectable } from "@nestjs/common";
 import { Car, Prisma } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { CarRecord } from "../../scraper/types";
-import { CarsSortBy, QueryCarsDto, SortOrder } from "../../cars/dto/query-cars.dto";
+import {
+  CarsSortBy,
+  QueryCarsDto,
+  SortOrder,
+} from "../../cars/dto/query-cars.dto";
 
 const BRAND_SEARCH_GROUPS = [
-  ["toyota", "トヨタ"],
-  ["nissan", "日産", "ニッサン"],
-  ["honda", "ホンダ"],
-  ["mazda", "マツダ"],
-  ["subaru", "スバル"],
-  ["mitsubishi", "三菱", "ミツビシ"],
-  ["suzuki", "スズキ"],
+  ["toyota", "トヨタ", "米国トヨタ", "us toyota"],
+  ["nissan", "日産", "ニッサン", "米国日産", "us nissan"],
+  ["honda", "ホンダ", "米国ホンダ", "us honda"],
+  ["mazda", "マツダ", "米国マツダ", "us mazda"],
+  ["subaru", "スバル", "米国スバル", "us subaru"],
+  ["mitsubishi", "三菱", "ミツビシ", "米国三菱", "us mitsubishi"],
+  ["suzuki", "スズキ", "米国スズキ", "us suzuki"],
   ["daihatsu", "ダイハツ"],
-  ["lexus", "レクサス"],
+  ["lexus", "レクサス", "米国レクサス", "us lexus"],
   ["isuzu", "いすゞ", "イスズ"],
+  ["hino", "日野", "日野自動車"],
+  ["mitsubishi fuso", "fuso", "三菱ふそう"],
+  ["ud trucks", "ud", "ＵＤトラックス"],
   [
     "mercedes-benz",
     "mercedes benz",
     "mercedes",
+    "benz",
     "ベンツ",
     "メルセデス ベンツ",
     "メルセデス・ベンツ",
   ],
+  ["mercedes-amg", "amg", "メルセデスＡＭＧ", "ＡＭＧ"],
+  ["mercedes-maybach", "maybach", "メルセデス・マイバッハ", "マイバッハ"],
   ["bmw", "ＢＭＷ", "ビーエムダブリュー"],
+  ["alpina", "bmw alpina", "ＢＭＷアルピナ", "アルピナ"],
+  ["mini", "ミニ"],
   ["audi", "アウディ"],
   ["volkswagen", "vw", "フォルクスワーゲン"],
   ["porsche", "ポルシェ"],
-  ["tesla", "テスラ"],
-  ["ford", "フォード"],
+  ["volvo", "ボルボ"],
+  ["jaguar", "ジャガー"],
+  ["land rover", "ランドローバー"],
+  ["rover", "ローバー"],
+  ["jeep", "ジープ", "amc jeep", "AMCジープ"],
+  ["gmc", "ＧＭＣ"],
+  ["cadillac", "キャデラック"],
   ["chevrolet", "シボレー"],
+  ["ford", "フォード"],
+  ["lincoln", "リンカーン"],
+  ["dodge", "ダッジ"],
+  ["chrysler", "クライスラー"],
+  ["hummer", "ハマー"],
+  ["buick", "ビュイック"],
+  ["mercury", "マーキュリー"],
+  ["pontiac", "ポンテアック"],
+  ["oldsmobile", "オールズモビル"],
+  ["saturn", "サターン"],
+  ["tesla", "テスラ"],
+  ["byd", "ＢＹＤ"],
+  ["infiniti", "インフィニティ", "米国インフィニティ", "us infiniti"],
+  ["acura", "アキュラ", "米国アキュラ", "us acura"],
+  ["hyundai", "ヒョンデ"],
+  ["mg", "ＭＧ"],
+  ["opel", "オペル"],
+  ["vauxhall", "ボクスホール"],
+  ["saab", "サーブ"],
+  ["renault", "ルノー"],
+  ["peugeot", "プジョー"],
+  ["citroen", "シトロエン"],
+  ["ds automobiles", "ds", "ＤＳオートモビル"],
+  ["fiat", "フィアット"],
+  ["abarth", "アバルト"],
+  ["alfa romeo", "alfa", "アルファ ロメオ"],
+  ["ferrari", "フェラーリ"],
+  ["lamborghini", "ランボルギーニ"],
+  ["maserati", "マセラティ"],
+  ["lancia", "ランチア"],
+  ["bugatti", "ブガッティ"],
+  ["aston martin", "アストンマーティン"],
+  ["bentley", "ベントレー"],
+  ["rolls-royce", "rolls royce", "ロールスロイス"],
+  ["mclaren", "マクラーレン"],
+  ["lotus", "ロータス"],
+  ["caterham", "ケータハム"],
+  ["morgan", "モーガン"],
+  ["triumph", "トライアンフ"],
+  ["de tomaso", "detomaso", "デトマソ"],
+  ["koenigsegg", "ケーニッグゼグ"],
+  ["ktm", "ＫＴＭ"],
+  ["dacia", "ダチア"],
+  ["lada", "ラーダ"],
+  ["smart", "スマート"],
+  ["daimler", "デイムラー"],
+  ["austin", "オースチン"],
+  ["morris", "モーリス"],
+  ["riley", "ライレー"],
+  ["healey", "ヒーレー"],
+  ["birkin", "バーキン"],
+  ["ginetta", "ジネッタ"],
+  ["brabus", "ブラバス"],
+  ["tommykaira", "トミーカイラ"],
+  ["autobianchi", "アウトビアンキ"],
+  ["westfield", "ウエストフィールド"],
+  ["winnebago", "ウィネベーゴ"],
+  ["scania", "スカニア"],
+  ["plymouth", "プリムス"],
+  ["dmc", "DMC"],
+  ["amc", "ＡＭＣ"],
+  ["td", "ＴＤ"],
+  ["bl", "ＢＬ"],
+  ["yes", "イエス"],
+  ["mvs", "MVS"],
+  ["vanden plas", "バンデンプラ"],
+  ["moke", "モーク"],
+  ["artega", "アルテガ"],
+  ["hurtan", "フータン"],
+  ["panhard", "パンサー"],
+  ["wolseley", "ウーズレイ"],
+  ["waz", "ワズ"],
+  ["london taxi", "ロンドンタクシー"],
+  ["other domestic", "国産車その他"],
+  ["other import", "輸入車その他"],
 ] as const;
 
 function normalizeSearchText(value: string): string {
@@ -42,21 +134,45 @@ function normalizeSearchText(value: string): string {
     .toLowerCase();
 }
 
+function toFullWidthAscii(value: string): string {
+  return value.replace(/[!-~]/g, (char) =>
+    String.fromCharCode(char.charCodeAt(0) + 0xfee0),
+  );
+}
+
 function expandBrandSearchTerms(brand: string): string[] {
   const normalizedInput = normalizeSearchText(brand);
   if (!normalizedInput) {
     return [];
   }
 
-  const terms = new Set([brand.trim()]);
+  const terms = new Set<string>();
+  const addTermWithVariants = (value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return;
+    }
+
+    terms.add(trimmed);
+    const nfkc = trimmed.normalize("NFKC");
+    terms.add(nfkc);
+
+    // Some sources store latin brands in full-width chars (e.g. "ＢＭＷ").
+    if (/^[\x20-\x7e]+$/.test(nfkc)) {
+      terms.add(toFullWidthAscii(nfkc.toUpperCase()));
+    }
+  };
+
+  addTermWithVariants(brand);
   for (const group of BRAND_SEARCH_GROUPS) {
     const normalizedGroup = group.map(normalizeSearchText);
     const hasMatch = normalizedGroup.some(
-      (alias) => alias.includes(normalizedInput) || normalizedInput.includes(alias),
+      (alias) =>
+        alias.includes(normalizedInput) || normalizedInput.includes(alias),
     );
 
     if (hasMatch) {
-      group.forEach((alias) => terms.add(alias));
+      group.forEach((alias) => addTermWithVariants(alias));
     }
   }
 
@@ -106,7 +222,8 @@ export class CarRepository {
     await this.prisma.$transaction(
       cars.map((car, index) => {
         const listingUrl =
-          car.listingUrl ?? `fallback:${car.id ?? "unknown"}:${now.getTime()}:${index}`;
+          car.listingUrl ??
+          `fallback:${car.id ?? "unknown"}:${now.getTime()}:${index}`;
         return this.prisma.car.upsert({
           where: {
             listingUrl,
@@ -240,18 +357,22 @@ export class CarRepository {
     return where;
   }
 
-  private buildOrderBy(query: QueryCarsDto): Prisma.CarOrderByWithRelationInput {
+  private buildOrderBy(
+    query: QueryCarsDto,
+  ): Prisma.CarOrderByWithRelationInput {
     const sortBy = query.sortBy ?? CarsSortBy.CREATED_AT;
     const sortOrder: Prisma.SortOrder =
       (query.sortOrder ?? SortOrder.DESC) === SortOrder.ASC ? "asc" : "desc";
 
-    const allowedSortFields: Record<CarsSortBy, Prisma.CarOrderByWithRelationInput> =
-      {
-        [CarsSortBy.PRICE_YEN]: { priceYen: sortOrder },
-        [CarsSortBy.MILEAGE_KM]: { mileageKm: sortOrder },
-        [CarsSortBy.YEAR]: { year: sortOrder },
-        [CarsSortBy.CREATED_AT]: { createdAt: sortOrder },
-      };
+    const allowedSortFields: Record<
+      CarsSortBy,
+      Prisma.CarOrderByWithRelationInput
+    > = {
+      [CarsSortBy.PRICE_YEN]: { priceYen: sortOrder },
+      [CarsSortBy.MILEAGE_KM]: { mileageKm: sortOrder },
+      [CarsSortBy.YEAR]: { year: sortOrder },
+      [CarsSortBy.CREATED_AT]: { createdAt: sortOrder },
+    };
 
     return allowedSortFields[sortBy] ?? { createdAt: "desc" };
   }
