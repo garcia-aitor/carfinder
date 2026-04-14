@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -20,6 +21,7 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
     queryKey: ["car", id],
     queryFn: () => getCarById(id),
   });
+  const [selectedPhotoUrl, setSelectedPhotoUrl] = useState<string | null>(null);
 
   if (query.isLoading) {
     return <Card className="h-[420px] animate-pulse bg-surface-alt" />;
@@ -47,35 +49,91 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
       : [view.mainPhotoUrl ?? fallbackImage];
   const ctaClassName =
     "inline-flex h-11 items-center justify-center rounded-md px-4 text-sm font-semibold transition-colors";
+  const activePhotoIndex = selectedPhotoUrl ? photos.indexOf(selectedPhotoUrl) : -1;
+  const normalizedActivePhotoIndex = activePhotoIndex >= 0 ? activePhotoIndex : 0;
+  const activePhoto = photos[normalizedActivePhotoIndex] ?? photos[0] ?? fallbackImage;
+  const canSlide = photos.length > 1;
+
+  const showPreviousPhoto = () => {
+    setSelectedPhotoUrl((current) => {
+      const currentIndex = current ? photos.indexOf(current) : 0;
+      const safeIndex = currentIndex >= 0 ? currentIndex : 0;
+      if (safeIndex === 0) {
+        return photos[photos.length - 1] ?? null;
+      }
+      return photos[safeIndex - 1] ?? null;
+    });
+  };
+
+  const showNextPhoto = () => {
+    setSelectedPhotoUrl((current) => {
+      const currentIndex = current ? photos.indexOf(current) : 0;
+      const safeIndex = currentIndex >= 0 ? currentIndex : 0;
+      return photos[(safeIndex + 1) % photos.length] ?? null;
+    });
+  };
 
   return (
     <div className="space-y-5">
       <Card className="p-0">
-        <div className="relative h-72 w-full md:h-[430px]">
+        <div className="relative h-72 w-full md:h-[520px]">
           <Image
-            src={view.mainPhotoUrl ?? fallbackImage}
+            src={activePhoto}
             alt={view.title}
             fill
             className="rounded-xl object-cover"
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw, 1100px"
+            quality={95}
+            priority
           />
+          {canSlide ? (
+            <>
+              <button
+                type="button"
+                onClick={showPreviousPhoto}
+                aria-label="Previous photo"
+                className="absolute left-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-lg text-white transition hover:bg-black/75"
+              >
+                &#8249;
+              </button>
+              <button
+                type="button"
+                onClick={showNextPhoto}
+                aria-label="Next photo"
+                className="absolute right-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-lg text-white transition hover:bg-black/75"
+              >
+                &#8250;
+              </button>
+              <div className="absolute bottom-3 right-3 rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white">
+                {normalizedActivePhotoIndex + 1} / {photos.length}
+              </div>
+            </>
+          ) : null}
         </div>
       </Card>
 
-      <div className="grid gap-3 sm:grid-cols-3 md:grid-cols-5">
-        {photos.slice(0, 10).map((photo) => (
-          <div
-            key={photo}
-            className="relative h-24 overflow-hidden rounded-lg border border-border"
+      <div className="grid grid-cols-4 gap-3 md:grid-cols-6">
+        {photos.slice(0, 12).map((photo, idx) => (
+          <button
+            key={`${photo}-${idx}`}
+            type="button"
+            onClick={() => setSelectedPhotoUrl(photo)}
+            className={`relative h-20 overflow-hidden rounded-lg border transition md:h-24 ${
+              idx === normalizedActivePhotoIndex
+                ? "border-accent ring-2 ring-accent/50"
+                : "border-border hover:border-accent/70"
+            }`}
+            aria-label={`Show photo ${idx + 1}`}
           >
             <Image
               src={photo}
-              alt={view.title}
+              alt={`${view.title} thumbnail ${idx + 1}`}
               fill
               className="object-cover"
-              sizes="200px"
+              sizes="(max-width: 768px) 25vw, 180px"
+              quality={85}
             />
-          </div>
+          </button>
         ))}
       </div>
 
