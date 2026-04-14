@@ -1,5 +1,4 @@
 import { Injectable, Logger } from "@nestjs/common";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import { env } from "../config/env";
 import {
@@ -130,14 +129,28 @@ export class ScraperService {
   }
 
   private async fetchPageHtml(page: number): Promise<string> {
-    const response = await axios.get<string>(this.buildPageUrl(page), {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-      },
-      timeout: env.httpTimeoutMs,
-    });
-    return response.data;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), env.httpTimeoutMs);
+
+    try {
+      const response = await fetch(this.buildPageUrl(page), {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        },
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch page ${page}. Status: ${response.status}`,
+        );
+      }
+
+      return await response.text();
+    } finally {
+      clearTimeout(timeout);
+    }
   }
 
   private buildPageUrl(page: number): string {
