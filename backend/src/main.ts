@@ -30,20 +30,24 @@ async function bootstrap(): Promise<void> {
     }),
   );
 
-  const queue = app.get<Queue>(getQueueToken(SCRAPE_QUEUE));
-  const serverAdapter = new ExpressAdapter();
-  serverAdapter.setBasePath(env.bullBoardPath);
+  if (env.enableJobs) {
+    const queue = app.get<Queue>(getQueueToken(SCRAPE_QUEUE));
+    const serverAdapter = new ExpressAdapter();
+    serverAdapter.setBasePath(env.bullBoardPath);
 
-  createBullBoard({
-    queues: [new BullMQAdapter(queue)],
-    serverAdapter,
-  });
+    createBullBoard({
+      queues: [new BullMQAdapter(queue)],
+      serverAdapter,
+    });
 
-  app.use(env.bullBoardPath, serverAdapter.getRouter());
+    app.use(env.bullBoardPath, serverAdapter.getRouter());
+  }
   await app.listen(env.appPort);
 
   Logger.log(
-    `Scraper app started. Scheduler/workers running. Bull Board: http://localhost:${env.appPort}${env.bullBoardPath}`,
+    env.enableJobs
+      ? `Scraper app started. Scheduler/workers running. Bull Board: http://localhost:${env.appPort}${env.bullBoardPath}`
+      : "Scraper app started. Jobs disabled (ENABLE_JOBS=false).",
   );
 }
 
