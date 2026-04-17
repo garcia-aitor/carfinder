@@ -1,9 +1,6 @@
 import type { Car } from "@/lib/api/types";
 import {
-  DISPLAY_EXTRA_CURRENCIES,
-  DISPLAY_PRIMARY_CURRENCY,
   formatEngineCc,
-  formatExtraPricesFromYen,
   formatMileageKm,
   formatPriceFromYen,
   formatYear,
@@ -61,8 +58,8 @@ export function mapCarToViewModel(car: Car): CarViewModel {
     colorLabel: normalizeColor(car.color),
     yearLabel: formatYear(car.year),
     mileageLabel: formatMileageKm(car.mileageKm),
-    priceLabel: formatPriceFromYen(car.priceYen, DISPLAY_PRIMARY_CURRENCY),
-    priceAltLabel: formatExtraPricesFromYen(car.priceYen, DISPLAY_EXTRA_CURRENCIES),
+    priceLabel: formatPriceFromYen(car.priceYen, "EUR"),
+    priceAltLabel: "",
     engineLabel: formatEngineCc(car.engineCc),
     sellerName: normalizeTextOrFallback(car.sellerName),
     sellerUrl: car.sellerUrl,
