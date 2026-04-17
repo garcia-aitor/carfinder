@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { DISPLAY_PRIMARY_CURRENCY } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import type { CarsQuery } from "@/lib/api/types";
 
@@ -146,7 +147,7 @@ export function FiltersPanel({
               onChange={(event) => setField("priceMin", event.target.value)}
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-text-secondary">
-              RUB
+              {DISPLAY_PRIMARY_CURRENCY}
             </span>
           </div>
           <div className="relative">
@@ -158,7 +159,7 @@ export function FiltersPanel({
               onChange={(event) => setField("priceMax", event.target.value)}
             />
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-text-secondary">
-              RUB
+              {DISPLAY_PRIMARY_CURRENCY}
             </span>
           </div>
         </div>

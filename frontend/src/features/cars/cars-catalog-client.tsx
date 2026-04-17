@@ -11,7 +11,11 @@ import { getCars } from "@/lib/api/endpoints";
 import type { CarsQuery, CarsSortBy, SortOrder } from "@/lib/api/types";
 import { parseCarsQuery, toSearchParams } from "@/lib/cars/query-params";
 import { mapCarToViewModel } from "@/lib/dictionary/car-view-model";
-import { convertRubToYen, convertYenToRub } from "@/lib/formatters";
+import {
+  convertToYen,
+  convertYen,
+  DISPLAY_PRIMARY_CURRENCY,
+} from "@/lib/formatters";
 import { CarCard } from "./car-card";
 import { FiltersPanel } from "./filters-panel";
 
@@ -67,8 +71,8 @@ export function CarsCatalogClient() {
   const filtersQuery = useMemo(
     () => ({
       ...query,
-      priceMin: convertYenToRub(query.priceMin),
-      priceMax: convertYenToRub(query.priceMax),
+      priceMin: convertYen(query.priceMin, DISPLAY_PRIMARY_CURRENCY),
+      priceMax: convertYen(query.priceMax, DISPLAY_PRIMARY_CURRENCY),
     }),
     [query],
   );
@@ -94,8 +98,14 @@ export function CarsCatalogClient() {
   const countPreviewQuery = useMemo(
     () => ({
       ...debouncedDraftFiltersQuery,
-      priceMin: convertRubToYen(debouncedDraftFiltersQuery.priceMin),
-      priceMax: convertRubToYen(debouncedDraftFiltersQuery.priceMax),
+      priceMin: convertToYen(
+        debouncedDraftFiltersQuery.priceMin,
+        DISPLAY_PRIMARY_CURRENCY,
+      ),
+      priceMax: convertToYen(
+        debouncedDraftFiltersQuery.priceMax,
+        DISPLAY_PRIMARY_CURRENCY,
+      ),
       page: 1,
       limit: 12,
     }),
@@ -110,8 +120,8 @@ export function CarsCatalogClient() {
   const applyFilters = (next: CarsQuery) => {
     updateQuery({
       ...next,
-      priceMin: convertRubToYen(next.priceMin),
-      priceMax: convertRubToYen(next.priceMax),
+      priceMin: convertToYen(next.priceMin, DISPLAY_PRIMARY_CURRENCY),
+      priceMax: convertToYen(next.priceMax, DISPLAY_PRIMARY_CURRENCY),
     });
   };
 

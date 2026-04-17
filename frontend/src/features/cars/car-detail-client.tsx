@@ -201,6 +201,9 @@ export function CarDetailClient({ id }: CarDetailClientProps) {
               <p className="wrap-break-word text-5xl font-black text-white">
                 {view.priceLabel}
               </p>
+              {view.priceAltLabel ? (
+                <p className="text-sm text-white/70">{view.priceAltLabel}</p>
+              ) : null}
               <Link
                 href={view.listingUrl}
                 target="_blank"

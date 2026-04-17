@@ -150,7 +150,7 @@ Open the app (e.g. `http://localhost:3001`), log in, then browse `/cars` and `/c
 |----------|---------|
 | **Root `.env`** | `POSTGRES_*`, `REDIS_PASSWORD` for Docker Compose |
 | **`backend/.env`** | `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`, `SCRAPE_CRON`, queue/worker tuning, `APP_PORT`, `BULL_BOARD_PATH`, feature flags such as `ENABLE_JOBS` |
-| **`frontend/.env.local`** | `NEXT_PUBLIC_API_URL`, optional `NEXT_PUBLIC_JPY_TO_RUB_RATE` for display |
+| **`frontend/.env.local`** | `NEXT_PUBLIC_API_URL`, optional `NEXT_PUBLIC_JPY_TO_EUR_RATE` (primary display) plus optional `NEXT_PUBLIC_JPY_TO_USD_RATE`, `NEXT_PUBLIC_JPY_TO_GBP_RATE`, `NEXT_PUBLIC_JPY_TO_RUB_RATE` |
 
 Full lists and scraper notes: [`backend/README.md`](backend/README.md). Frontend-specific notes: [`frontend/README.md`](frontend/README.md).
 

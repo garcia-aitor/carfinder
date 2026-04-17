@@ -69,6 +69,9 @@ export function CarCard({ car }: CarCardProps) {
                 Price
               </p>
               <p className="text-2xl font-bold text-accent">{car.priceLabel}</p>
+              {car.priceAltLabel ? (
+                <p className="text-xs text-text-secondary">{car.priceAltLabel}</p>
+              ) : null}
             </div>
             <span className="inline-flex items-center gap-1 text-sm font-semibold text-[#242424]">
               Details
